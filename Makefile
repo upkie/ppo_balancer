@@ -45,9 +45,7 @@ clean_broken_links:
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
-	$(BAZEL) build --config=pi64 //agent
-	$(BAZEL) build --config=pi64 //spines:mock_spine
-	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
+	$(BAZEL) build --config=pi64 //ppo_balancer:run
 
 .PHONY: clean
 clean:  ## clean all local build and intermediate files
@@ -60,12 +58,5 @@ upload: check-robot build  ## upload built targets to the Raspberry Pi
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
-run_agent:  ### run agent
-	$(RASPUNZEL) run -v -s //agent
-
-run_mock_spine:  ### run the mock spine on the Raspberry Pi
-	$(RASPUNZEL) run -s //spines:mock_spine
-
-# NB: run_pi3hat_spine is used in build instructions
-run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
-	$(RASPUNZEL) run -s //spines:pi3hat_spine
+run_ppo_balancer:  ### run agent
+	$(RASPUNZEL) run -v -s //ppo_balancer:run
