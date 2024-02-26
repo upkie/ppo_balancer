@@ -21,6 +21,35 @@ pip install upkie[ppo_balancer]
 
 This instruction works on both your dev machine and the robot's Raspberry Pi.
 
+## Running a policy
+
+To run the default policy:
+
+```console
+python ppo_balancer/run.py
+```
+
+Here we assumed the spine is already up and running, for instance by running ``./start_simulation.sh`` on your dev machine, or by starting a pi3hat spine on the robot.
+
+To run a policy saved to a custom path, use for instance:
+
+```console
+python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
+```
+
+## Real robot
+
+On the real robot you can use the Makefile at the root of the repository as follows. This will run the policy saved at the default path:
+
+```console
+$ make build
+$ make upload
+$ ssh your-upkie
+user@your-upkie:~$ make run_ppo_balancer
+```
+
+To run a custom policy, save its ZIP file to ``ppo_balancer/policy/params.zip`` (save its operative config as well) and follow the same steps.
+
 ## Training a new policy
 
 First, check that training progresses one rollout at a time:
@@ -30,27 +59,6 @@ First, check that training progresses one rollout at a time:
 ```
 
 Once this works you can remove the ``--show`` GUI toggle. Check out the `time/fps` plots in the command line or in TensorBoard to adjust the number of parallel environments from 2 (above) to "as much as you can as long as FPS keeps going up".
-
-## Running a trained policy
-
-Run a policy with the path to the ZIP file containing its parameters:
-
-```console
-python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
-```
-
-Here we assumed the spine is already up and running, for instance by running ``./start_simulation.sh`` on your dev machine, or by starting a pi3hat spine on the robot.
-
-## Real robot
-
-To run a policy on a real Upkie, save its ZIP file to ``ppo_balancer/policy/params.zip`` (save its operative config as well), then use the Makefile at the root of the repository:
-
-```console
-$ make build
-$ make upload
-$ ssh your-upkie
-user@your-upkie:~$ make run_ppo_balancer
-```
 
 ## Troubleshooting
 
