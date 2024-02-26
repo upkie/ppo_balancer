@@ -19,8 +19,8 @@ py_library(
         ":config",
     ],
     deps = [
-        "//upkie/envs",
-        "//upkie/envs/wrappers",
+        "@upkie//upkie/envs",
+        "@upkie//upkie/envs/wrappers",
     ],
 )
 
@@ -38,10 +38,10 @@ py_binary(
         "policy/params.zip",
     ],
     deps = [
-        "//upkie/envs",
-        "//upkie/utils:filters",
-        "//upkie/utils:raspi",
-        "//upkie/utils:robot_state",
+        "@upkie//upkie/envs",
+        "@upkie//upkie/utils:filters",
+        "@upkie//upkie/utils:raspi",
+        "@upkie//upkie/utils:robot_state",
         ":common",
     ],
 )
@@ -59,9 +59,9 @@ py_binary(
         "//spines:bullet_spine",
     ],
     deps = [
-        "//upkie/envs",
-        "//upkie/utils:robot_state",
-        "//upkie/utils:spdlog",
+        "@upkie//upkie/envs",
+        "@upkie//upkie/utils:robot_state",
+        "@upkie//upkie/utils:spdlog",
         ":common",
         "@rules_python//python/runfiles",
     ],
