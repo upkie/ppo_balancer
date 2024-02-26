@@ -2,8 +2,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-load("//tools/lint:lint.bzl", "add_lint_tests")
-
 package(default_visibility = ["//visibility:public"])
 
 filegroup(
@@ -68,5 +66,3 @@ py_binary(
         "@rules_python//python/runfiles",
     ],
 )
-
-add_lint_tests()
