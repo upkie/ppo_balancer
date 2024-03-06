@@ -1,8 +1,6 @@
-# Makefile for upkie targets
+# Makefile for the PPO balancer
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
-# Copyright 2023-2024 Inria
 
 # Adjust the following for best performance on your training machine:
 NB_ENVS = 6
@@ -59,7 +57,7 @@ clean:  ## clean intermediate build files
 	$(BAZEL) clean --expunge
 
 .PHONY: upload
-upload: check_upkie_name build  ## upload targets to the Raspberry Pi
+upload: check_upkie_name build  ## upload agent to the Raspberry Pi
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
