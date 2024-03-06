@@ -8,6 +8,7 @@ dependencies:
     - loop-rate-limiters >=1.0.0
     - pip
     - stable-baselines3 >=2.1.0
+    - tensorboard
     - upkie_description >=1.5.0
     - vulp >=2.2.1
     - pip:
