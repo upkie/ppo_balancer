@@ -5,9 +5,8 @@
 # Adjust the following for best performance on your training machine:
 NB_ENVS = 6
 
-# Hostname or IP address of the Raspberry Pi Uses the value from the
-# UPKIE_NAME environment variable, if defined. Valid usage: ``make upload
-# UPKIE_NAME=foo``
+# Hostname or IP address of the robot's Raspberry Pi. Uses the value from the
+# UPKIE_NAME environment variable, if defined.
 REMOTE = ${UPKIE_NAME}
 
 # Path to the training directory
@@ -28,7 +27,7 @@ RASPUNZEL = $(CURDIR)/tools/raspunzel
 help:
 	@echo "Host targets:\n"
 	@grep -P '^[a-zA-Z0-9_-]+:.*? ## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
-	@echo "\nRaspberry Pi targets:\n"
+	@echo "\nRobot targets:\n"
 	@grep -P '^[a-zA-Z0-9_-]+:.*?### .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?### "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
 .DEFAULT_GOAL := help
 
@@ -57,7 +56,7 @@ clean:  ## clean intermediate build files
 	$(BAZEL) clean --expunge
 
 .PHONY: upload
-upload: check_upkie_name build  ## upload agent to the Raspberry Pi
+upload: check_upkie_name build  ## upload agent to the robot
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
@@ -72,5 +71,5 @@ tensorboard:  ## Start tensorboard on today's trainings
 	$(BROWSER) http://localhost:6006 &
 	tensorboard --logdir $(TRAINING_DIR)/$(DATE)
 
-run_ppo_balancer:  ### run agent
+run_policy:  ### run saved policy on the real robot
 	$(RASPUNZEL) run -v -s //ppo_balancer:run
