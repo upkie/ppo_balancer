@@ -86,6 +86,7 @@ class InitRandomizationCallback(BaseCallback):
         cur_value = progress * self.max_value
         self.vec_env.env_method("update_init_rand", **{self.key: cur_value})
         self.logger.record(f"init_rand/{self.key}", cur_value)
+        return True
 
 
 class SummaryWriterCallback(BaseCallback):
@@ -106,7 +107,7 @@ class SummaryWriterCallback(BaseCallback):
         # We wait for the first call to log operative config so that parameters
         # for functions called by the environment are logged as well.
         if self.n_calls != 1:
-            return
+            return True
         self.tb_formatter.writer.add_text(
             "gin/operative_config",
             gin.operative_config_str(),
@@ -116,6 +117,7 @@ class SummaryWriterCallback(BaseCallback):
         with open(gin_path, "w") as fh:
             fh.write(gin.operative_config_str())
         logging.info(f"Saved gin configuration to {gin_path}")
+        return True
 
 
 def get_random_word():
