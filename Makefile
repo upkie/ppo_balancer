@@ -20,6 +20,7 @@ BROWSER = firefox
 CURDATE = $(shell date --iso=seconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
+TRAINING_DATE = $(shell date +%Y-%m-%d)
 
 # Help snippet adapted from:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -67,9 +68,9 @@ train:  ## train a new policy
 
 tensorboard:  ## Start tensorboard on today's trainings
 	rm -f $(TRAINING_DIR)/today
-	ln -sf $(TRAINING_DIR)/$(DATE) $(TRAINING_DIR)/today
+	ln -sf $(TRAINING_DIR)/$(TRAINING_DATE) $(TRAINING_DIR)/today
 	$(BROWSER) http://localhost:6006 &
-	tensorboard --logdir $(TRAINING_DIR)/$(DATE)
+	tensorboard --logdir $(TRAINING_DIR)/$(TRAINING_DATE)
 
 run_policy:  ### run saved policy on the real robot
 	$(RASPUNZEL) run -v -s //ppo_balancer:run
