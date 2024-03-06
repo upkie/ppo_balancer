@@ -4,6 +4,9 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023-2024 Inria
 
+# Adjust the following for best performance on your training machine:
+NB_ENVS = 4
+
 # Hostname or IP address of the Raspberry Pi Uses the value from the
 # UPKIE_NAME environment variable, if defined. Valid usage: ``make upload
 # UPKIE_NAME=foo``
@@ -44,19 +47,22 @@ clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
 
 .PHONY: build
-build: clean_broken_links  ## build Raspberry Pi targets
+build: clean_broken_links
 	$(BAZEL) build --config=pi64 //ppo_balancer:run
 
 .PHONY: clean
-clean:  ## clean all local build and intermediate files
+clean:  ## clean intermediate build files
 	$(BAZEL) clean --expunge
 
 .PHONY: upload
-upload: check-robot build  ## upload built targets to the Raspberry Pi
+upload: check_upkie_name build  ## upload targets to the Raspberry Pi
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
+
+train:  ## train a new policy
+	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS)
 
 run_ppo_balancer:  ### run agent
 	$(RASPUNZEL) run -v -s //ppo_balancer:run
