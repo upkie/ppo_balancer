@@ -5,17 +5,21 @@
 # Copyright 2023-2024 Inria
 
 # Adjust the following for best performance on your training machine:
-NB_ENVS = 4
+NB_ENVS = 6
 
 # Hostname or IP address of the Raspberry Pi Uses the value from the
 # UPKIE_NAME environment variable, if defined. Valid usage: ``make upload
 # UPKIE_NAME=foo``
 REMOTE = ${UPKIE_NAME}
 
+# Path to the training directory
+TRAINING_DIR = ${UPKIE_TRAINING_PATH}
+
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = ppo_balancer
 
 BAZEL = $(CURDIR)/tools/bazelisk
+BROWSER = firefox
 CURDATE = $(shell date --iso=seconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
@@ -63,6 +67,12 @@ upload: check_upkie_name build  ## upload targets to the Raspberry Pi
 
 train:  ## train a new policy
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS)
+
+tensorboard:  ## Start tensorboard on today's trainings
+	rm -f $(TRAINING_DIR)/today
+	ln -sf $(TRAINING_DIR)/$(DATE) $(TRAINING_DIR)/today
+	$(BROWSER) http://localhost:6006 &
+	tensorboard --logdir $(TRAINING_DIR)/$(DATE)
 
 run_ppo_balancer:  ### run agent
 	$(RASPUNZEL) run -v -s //ppo_balancer:run
