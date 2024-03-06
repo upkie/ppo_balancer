@@ -56,7 +56,7 @@ py_binary(
     imports = ["."],
 
     data = [
-        "//spines:bullet_spine",
+        "@upkie//spines:bullet_spine",
     ],
     deps = [
         "@upkie//upkie/envs",
