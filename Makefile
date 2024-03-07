@@ -13,15 +13,13 @@ REMOTE = ${UPKIE_NAME}
 TRAINING_DIR = ${UPKIE_TRAINING_PATH}
 TRAINING_RELDIR = $(shell basename $(TRAINING_DIR))
 
-# Project name, needs to match the one in WORKSPACE
-PROJECT_NAME = ppo_balancer
-
 BAZEL = $(CURDIR)/tools/bazelisk
 BROWSER = firefox
 CURDATE = $(shell date --iso=seconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 TRAINING_DATE = $(shell date +%Y-%m-%d)
+TRAINING_PATH = ${UPKIE_TRAINING_PATH}
 
 # Help snippet adapted from:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -60,18 +58,18 @@ clean:  ## clean intermediate build files
 .PHONY: upload
 upload: check_upkie_name build  ## upload agent to the robot
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
-	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
-	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --exclude $(TRAINING_RELDIR)/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
+	ssh $(REMOTE) mkdir -p $(CURDIR_NAME)
+	ssh $(REMOTE) sudo find $(CURDIR_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_RELDIR)/ --progress $(CURDIR)/ $(REMOTE):$(CURDIR_NAME)/
 
 train:  ## train a new policy
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS)
 
 tensorboard:  ## Start tensorboard on today's trainings
-	rm -f $(TRAINING_DIR)/today
-	ln -sf $(TRAINING_DIR)/$(TRAINING_DATE) $(TRAINING_DIR)/today
+	rm -f $(TRAINING_PATH)/today
+	ln -sf $(TRAINING_PATH)/$(TRAINING_DATE) $(TRAINING_PATH)/today
 	$(BROWSER) http://localhost:6006 &
-	tensorboard --logdir $(TRAINING_DIR)/$(TRAINING_DATE)
+	tensorboard --logdir $(TRAINING_PATH)/$(TRAINING_DATE)
 
 run_policy:  ### run saved policy on the real robot
 	$(RASPUNZEL) run -v -s //ppo_balancer:run
