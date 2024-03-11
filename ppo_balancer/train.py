@@ -9,6 +9,7 @@ import datetime
 import os
 import random
 import signal
+import tempfile
 from typing import Callable, List
 
 import gin
@@ -376,7 +377,9 @@ if __name__ == "__main__":
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
-    training_path = os.path.join(os.path.dirname(agent_dir), "training")
+    training_path = os.environ.get(
+        "UPKIE_TRAINING_PATH", tempfile.gettempdir()
+    )
     date = datetime.datetime.now().strftime("%Y-%m-%d")
     training_dir = f"{training_path}/{date}"
     logging.info("Logging training data in %s", training_dir)
