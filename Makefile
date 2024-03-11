@@ -9,8 +9,8 @@ NB_ENVS = 6
 # UPKIE_NAME environment variable, if defined.
 REMOTE = ${UPKIE_NAME}
 
-# Path to the training directory
-TRAINING_DIR = ${UPKIE_TRAINING_PATH}
+# Path to the training directory, relative to the Makefile, no trailing slash
+TRAINING_DIR = training
 
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = ppo_balancer
@@ -61,7 +61,7 @@ upload: check_upkie_name build  ## upload agent to the robot
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --exclude $(TRAINING_DIR)/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
 train:  ## train a new policy
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS)
