@@ -58,11 +58,23 @@ To run a custom policy, save its ZIP file to ``ppo_balancer/policy/params.zip`` 
 
 First, check that training progresses one rollout at a time:
 
-```
-./tools/bazelisk run //ppo_balancer:train -- --show --nb-envs 2
+```console
+make show_training
 ```
 
-Once this works you can remove the ``--show`` GUI toggle. Check out the `time/fps` plots in the command line or in TensorBoard to adjust the number of parallel environments from 2 (above) to "as much as you can as long as FPS keeps going up".
+Once this works you can train for real, with more environments and no GUI:
+
+```console
+make train
+```
+
+Check out the `time/fps` plots in the command line or in TensorBoard to adjust the number of parallel environments:
+
+```console
+make tensorboard
+```
+
+You should increase the number of environments from the default value (``NB_TRAINING_ENVS`` in the Makefile) to "as much as you can as long as FPS keeps going up".
 
 ## Troubleshooting
 
