@@ -10,10 +10,6 @@ NB_TRAINING_ENVS = 6
 # UPKIE_NAME environment variable, if defined.
 REMOTE = ${UPKIE_NAME}
 
-# Path to the training directory
-TRAINING_DIR = ${UPKIE_TRAINING_PATH}
-TRAINING_RELDIR = $(shell basename $(TRAINING_DIR))
-
 BAZEL = $(CURDIR)/tools/bazelisk
 BROWSER = firefox
 CURDATE = $(shell date --iso=seconds)
@@ -21,6 +17,9 @@ CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 TRAINING_DATE = $(shell date +%Y-%m-%d)
 TRAINING_PATH = ${UPKIE_TRAINING_PATH}
+
+# Only used to avoid uploading the training directory to the robot
+TRAINING_DIRNAME = $(shell basename ${UPKIE_TRAINING_PATH})
 
 # Help snippet adapted from:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -61,7 +60,7 @@ upload: check_upkie_name build  ## upload agent to the robot
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(CURDIR_NAME)
 	ssh $(REMOTE) sudo find $(CURDIR_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_RELDIR)/ --progress $(CURDIR)/ $(REMOTE):$(CURDIR_NAME)/
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_DIRNAME)/ --progress $(CURDIR)/ $(REMOTE):$(CURDIR_NAME)/
 
 train:  ## train a new policy
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS)
