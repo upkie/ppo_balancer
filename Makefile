@@ -65,6 +65,9 @@ upload: check_upkie_name build  ## upload agent to the robot
 train:  ## train a new policy
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS)
 
+show_training:  ## train a new policy, showing simulation processes (slower)
+	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS) --show
+
 tensorboard:  ## Start tensorboard on today's trainings
 	rm -f $(TRAINING_PATH)/today
 	ln -sf $(TRAINING_PATH)/$(TRAINING_DATE) $(TRAINING_PATH)/today
