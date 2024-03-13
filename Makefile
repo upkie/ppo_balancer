@@ -2,8 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Adjust the following for best performance on your training machine:
-NB_ENVS = 6
+# Adjust the number of training env. for best performance on your machine:
+NB_SHOW_TRAINING_ENVS = 2
+NB_TRAINING_ENVS = 6
 
 # Hostname or IP address of the robot's Raspberry Pi. Uses the value from the
 # UPKIE_NAME environment variable, if defined.
@@ -63,10 +64,10 @@ upload: check_upkie_name build  ## upload agent to the robot
 	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_RELDIR)/ --progress $(CURDIR)/ $(REMOTE):$(CURDIR_NAME)/
 
 train:  ## train a new policy
-	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS)
+	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS)
 
 show_training:  ## train a new policy, showing simulation processes (slower)
-	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_ENVS) --show
+	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_SHOW_TRAINING_ENVS) --show
 
 tensorboard:  ## Start tensorboard on today's trainings
 	rm -f $(TRAINING_PATH)/today
