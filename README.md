@@ -10,30 +10,22 @@ An overview video of the training pipeline is given in this video: [Sim-to-real 
 
 ## Installation
 
-### From Conda
-
 ```console
 conda create -f environment.yaml
 conda activate ppo_balancer
 ```
 
-### From PyPI
-
-```console
-pip install upkie[ppo_balancer]
-```
-
-This instruction works on both your dev machine and the robot's Raspberry Pi.
-
 ## Running a policy
+
+### On your machine
 
 To run the default policy:
 
 ```console
-python ppo_balancer/run.py
+make test_policy
 ```
 
-Here we assumed the spine is already up and running, for instance by running ``./start_simulation.sh`` on your dev machine, or by starting a pi3hat spine on the robot.
+Here we assumed the spine is already up and running, for instance by running ``./start_simulation.sh`` from [upkie](https://github.com/upkie/upkie) on your machine, or by starting a pi3hat spine on the robot.
 
 To run a policy saved to a custom path, use for instance:
 
@@ -41,18 +33,23 @@ To run a policy saved to a custom path, use for instance:
 python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
 ```
 
-## Real robot
+## On a real robot
 
-On the real robot you can use the Makefile at the root of the repository as follows. This will run the policy saved at the default path:
+To build and upload your policy to the robot:
 
 ```console
 $ make build
 $ make upload
+```
+
+Then, SSH into the robot and run the following target:
+
+```console
 $ ssh your-upkie
 user@your-upkie:~$ make run_ppo_balancer
 ```
 
-To run a custom policy, save its ZIP file to ``ppo_balancer/policy/params.zip`` (save its operative config as well) and follow the same steps.
+This will run the policy saved at the default path. To run a custom policy, save its ZIP file to ``ppo_balancer/policy/params.zip`` (save its operative config as well) and follow the same steps.
 
 ## Training a new policy
 
