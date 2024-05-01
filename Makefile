@@ -10,11 +10,14 @@ NB_TRAINING_ENVS = 6
 # UPKIE_NAME environment variable, if defined.
 REMOTE = ${UPKIE_NAME}
 
+# Programs
 BAZEL = $(CURDIR)/tools/bazelisk
 BROWSER = firefox
+PYTHON = python3
+RASPUNZEL = $(CURDIR)/tools/raspunzel
+
 CURDATE = $(shell date --iso=seconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
-RASPUNZEL = $(CURDIR)/tools/raspunzel
 TRAINING_DATE = $(shell date +%Y-%m-%d)
 TRAINING_PATH = ${UPKIE_TRAINING_PATH}
 
@@ -55,18 +58,15 @@ build: clean_broken_links
 clean:  ## clean intermediate build files
 	$(BAZEL) clean --expunge
 
+run_policy:  ### run saved policy on the real robot
+	$(RASPUNZEL) run -v -s //ppo_balancer:run
 .PHONY: upload
+
 upload: check_upkie_name build  ## upload agent to the robot
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(CURDIR_NAME)
 	ssh $(REMOTE) sudo find $(CURDIR_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_DIRNAME)/ --progress $(CURDIR)/ $(REMOTE):$(CURDIR_NAME)/
-
-train:  ## train a new policy
-	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS)
-
-show_training:  ## train a new policy, showing simulation processes (slower)
-	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_SHOW_TRAINING_ENVS) --show
 
 tensorboard:  ## Start tensorboard on today's trainings
 	rm -f $(TRAINING_PATH)/today
@@ -74,5 +74,11 @@ tensorboard:  ## Start tensorboard on today's trainings
 	$(BROWSER) http://localhost:6006 &
 	tensorboard --logdir $(TRAINING_PATH)/$(TRAINING_DATE)
 
-run_policy:  ### run saved policy on the real robot
-	$(RASPUNZEL) run -v -s //ppo_balancer:run
+test_policy:  ## test locally saved policy
+	$(PYTHON) ppo_balancer/run.py
+
+train:  ## train a new policy
+	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS)
+
+train_and_show:  ## train a new policy with simulations shown (slower)
+	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_SHOW_TRAINING_ENVS) --show
