@@ -56,7 +56,7 @@ This will run the policy saved at the default path. To run a custom policy, save
 First, check that training progresses one rollout at a time:
 
 ```console
-make show_training
+make train_and_show
 ```
 
 Once this works you can train for real, with more environments and no GUI:
