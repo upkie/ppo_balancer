@@ -82,15 +82,11 @@ def run_policy(env: gym.Wrapper, policy) -> None:
     while True:
         action, _ = policy.predict(observation, deterministic=True)
         tip_position, tip_velocity = get_tip_state(observation[-1])
-        env.log(
-            {
-                "action": action,
-                "observation": observation[-1],
-                "reward": reward,
-                "tip_position": tip_position,
-                "tip_velocity": tip_velocity,
-            }
-        )
+        env.log("action", action)
+        env.log("observation", observation[-1])
+        env.log("reward", reward)
+        env.log("tip_position", tip_position)
+        env.log("tip_velocity", tip_velocity)
         observation, reward, terminated, truncated, info = env.step(action)
         if terminated or truncated:
             observation, info = env.reset()
