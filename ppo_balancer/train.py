@@ -16,7 +16,6 @@ import gin
 import gymnasium
 import numpy as np
 import stable_baselines3
-import upkie.envs
 from envs import make_ppo_balancer_env
 from rules_python.python.runfiles import runfiles
 from settings import EnvSettings, PPOSettings, TrainingSettings
@@ -27,6 +26,8 @@ from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
+
+import upkie.envs
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
@@ -181,8 +182,9 @@ def init_env(
             max_episode_steps=int(max_episode_duration * agent_frequency),
             frequency=agent_frequency,
             regulate_frequency=False,
-            reward_weights=upkie.envs.UpkieGroundVelocity.RewardWeights(
-                **env_settings.reward_weights
+            reward_weights=upkie.envs.rewards.WheeledInvertedPendulumReward(
+                position_weight=env_settings.reward_weights["position"],
+                velocity_weight=env_settings.reward_weights["velocity"],
             ),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
