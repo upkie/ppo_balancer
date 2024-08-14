@@ -59,10 +59,10 @@ py_binary(
         "@upkie//spines:bullet_spine",
     ],
     deps = [
+        ":common",
+        "@rules_python//python/runfiles",
         "@upkie//upkie/envs",
         "@upkie//upkie/utils:robot_state",
         "@upkie//upkie/utils:spdlog",
-        ":common",
-        "@rules_python//python/runfiles",
     ],
 )
