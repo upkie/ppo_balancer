@@ -16,6 +16,7 @@ import gin
 import gymnasium
 import numpy as np
 import stable_baselines3
+import upkie.envs
 from envs import make_ppo_balancer_env
 from rules_python.python.runfiles import runfiles
 from settings import EnvSettings, PPOSettings, TrainingSettings
@@ -26,8 +27,6 @@ from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
-
-import upkie.envs
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()

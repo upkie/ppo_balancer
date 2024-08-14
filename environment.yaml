@@ -7,5 +7,5 @@ dependencies:
     - loop-rate-limiters >=1.0.0
     - stable-baselines3 >=2.1.0
     - tensorboard
-    - upkie >=5.0.0
+    - upkie >=5.1.0
     - upkie_description >=2.1.0
