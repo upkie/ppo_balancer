@@ -13,9 +13,9 @@ EnvSettings.history_size = 10
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
 EnvSettings.observation_noise = [0.01, 0.01, 0.01, 0.01]
-EnvSettings.reward_weights = {
-    "position": 1.0,
-    "velocity": 0.1,
+EnvSettings.reward = {
+    "position_weight": 1.0,
+    "velocity_weight": 0.1,
 }
 EnvSettings.spine_config = {
     "bullet": {

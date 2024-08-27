@@ -26,7 +26,7 @@ class EnvSettings:
     max_ground_accel: float
     max_ground_velocity: float
     observation_noise: List[float]
-    reward_weights: dict
+    reward: dict
     spine_config: dict
     spine_frequency: int
 
