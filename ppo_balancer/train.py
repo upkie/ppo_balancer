@@ -181,9 +181,9 @@ def init_env(
             max_episode_steps=int(max_episode_duration * agent_frequency),
             frequency=agent_frequency,
             regulate_frequency=False,
-            reward_weights=upkie.envs.rewards.WheeledInvertedPendulumReward(
-                position_weight=env_settings.reward_weights["position"],
-                velocity_weight=env_settings.reward_weights["velocity"],
+            reward=upkie.envs.rewards.WheeledInvertedPendulumReward(
+                position_weight=env_settings.reward["position_weight"],
+                velocity_weight=env_settings.reward["velocity_weight"],
             ),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
