@@ -16,7 +16,7 @@ BROWSER = firefox
 PYTHON = python3
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
-CURDATE = $(shell date --iso=seconds)
+CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 TRAINING_DATE = $(shell date +%Y-%m-%d)
 TRAINING_PATH = ${UPKIE_TRAINING_PATH}
