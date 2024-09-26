@@ -11,7 +11,7 @@ An overview video of the training pipeline is given in this video: [Sim-to-real 
 ## Installation
 
 ```console
-conda create -f environment.yaml
+conda env create -f environment.yaml
 conda activate ppo_balancer
 ```
 
