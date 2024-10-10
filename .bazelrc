@@ -5,7 +5,7 @@
 build --compilation_mode=opt
 build --copt="-Werror=return-type"
 build --cxxopt=-std=c++17
-build --incompatible_default_to_explicit_init_py  # for upkie and vulp imports
+build --incompatible_default_to_explicit_init_py  # for upkie imports
 
 coverage --combined_report=lcov
 coverage --compilation_mode=opt
@@ -17,7 +17,7 @@ test --compilation_mode=opt
 test --copt="-Werror=return-type"
 test --cxxopt=-std=c++17
 test --test_output=errors
-test --incompatible_default_to_explicit_init_py  # for upkie and vulp imports
+test --incompatible_default_to_explicit_init_py  # for upkie imports
 
 ## Target platform: 64-bit Raspberry Pi OS
 
