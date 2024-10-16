@@ -82,3 +82,27 @@ train:  ## train a new policy
 
 train_and_show:  ## train a new policy with simulations shown (slower)
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_SHOW_TRAINING_ENVS) --show
+
+# Packing and unpacking conda environment for an offline Upkie
+# ============================================================
+
+.PHONY: check_mamba_setup
+check_mamba_setup:
+	@ if [ -z "${MAMBA_EXE}" ] || [ -z "${MAMBA_ROOT_PREFIX}" ]; then \
+		echo "ERROR: Either MAMBA_EXE or MAMBA_ROOT_PREFIX is not set."; \
+		echo "Is Micromamba installed?"; \
+		echo "See https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html"; \
+		exit 1; \
+	fi
+
+.PHONY: pack_conda_env
+pack_conda_env: check_mamba_setup  ## prepare conda environment to install it offline on your Upkie
+	${MAMBA_EXE} env create -f environment.yaml -n raspios_$(PROJECT_NAME) --platform linux-aarch64 -y
+	tar -zcf $(CONDA_ENV_FILE) -C ${MAMBA_ROOT_PREFIX}/envs/raspios_$(PROJECT_NAME) .
+	# ${MAMBA_EXE} env remove -n raspios_$(PROJECT_NAME) -y
+
+.PHONY: check_mamba_setup unpack_conda_env
+unpack_conda_env:  ### unpack conda environment to remote conda path
+	-${MAMBA_EXE} env list | grep $(PROJECT_NAME) > /dev/null && micromamba env remove -n $(PROJECT_NAME) -y
+	mkdir -p ${MAMBA_ROOT_PREFIX}/envs/$(PROJECT_NAME)
+	tar -zxf $(CONDA_ENV_FILE) -C ${MAMBA_ROOT_PREFIX}/envs/$(PROJECT_NAME)
