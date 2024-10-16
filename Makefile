@@ -2,17 +2,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+PROJECT_NAME = ppo_balancer
+
 # Adjust the number of training env. for best performance on your machine:
 NB_SHOW_TRAINING_ENVS = 2
 NB_TRAINING_ENVS = 6
 
-# Hostname or IP address of the robot's Raspberry Pi. Uses the value from the
-# UPKIE_NAME environment variable, if defined.
-REMOTE = ${UPKIE_NAME}
-
 # Programs
 BAZEL = $(CURDIR)/tools/bazelisk
 BROWSER = firefox
+CONDA_ENV_FILE = conda_env.tar.gz
 PYTHON = python3
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
@@ -57,16 +56,17 @@ build: clean_broken_links
 .PHONY: clean
 clean:  ## clean intermediate build files
 	$(BAZEL) clean --expunge
+	rm -f $(CONDA_ENV_FILE)
 
 run_policy:  ### run saved policy on the real robot
 	$(RASPUNZEL) run -v -s //ppo_balancer:run
 .PHONY: upload
 
 upload: check_upkie_name build  ## upload agent to the robot
-	ssh $(REMOTE) sudo date -s "$(CURDATE)"
-	ssh $(REMOTE) mkdir -p $(CURDIR_NAME)
-	ssh $(REMOTE) sudo find $(CURDIR_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_DIRNAME)/ --progress $(CURDIR)/ $(REMOTE):$(CURDIR_NAME)/
+	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
+	ssh ${UPKIE_NAME} mkdir -p $(CURDIR_NAME)
+	ssh ${UPKIE_NAME} sudo find $(CURDIR_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_DIRNAME)/ --progress $(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
 
 tensorboard:  ## Start tensorboard on today's trainings
 	rm -f $(TRAINING_PATH)/today
