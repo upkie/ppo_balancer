@@ -1,5 +1,6 @@
 __pycache__
 bazel-*
+cache/
 conda_env.tar.gz
 tools/bazel
 training/
