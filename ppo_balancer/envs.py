@@ -12,7 +12,7 @@ from settings import EnvSettings
 from upkie.envs import UpkieGroundVelocity
 from upkie.envs.wrappers import (
     AddActionToObservation,
-    LowPassFilterAction,
+    AddLagToAction,
     DifferentiateAction,
     NoisifyAction,
     NoisifyObservation,
@@ -27,7 +27,7 @@ def make_training_env(
     observation_noise = np.array(env_settings.observation_noise)
     noisy_obs_env = NoisifyObservation(velocity_env, noise=observation_noise)
     noisy_env = NoisifyAction(noisy_obs_env, noise=action_noise)
-    filtered_env = LowPassFilterAction(
+    filtered_env = AddLagToAction(
         noisy_env,
         time_constant=spaces.Box(*env_settings.action_lpf),
     )
