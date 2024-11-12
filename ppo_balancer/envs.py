@@ -9,12 +9,11 @@ import numpy as np
 from gymnasium import spaces
 from gymnasium.wrappers import FrameStack, RescaleAction
 from settings import EnvSettings
-
 from upkie.envs import UpkieGroundVelocity
 from upkie.envs.wrappers import (
     AddActionToObservation,
-    DifferentiateAction,
     LowPassFilterAction,
+    DifferentiateAction,
     NoisifyAction,
     NoisifyObservation,
 )
