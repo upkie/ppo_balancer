@@ -22,3 +22,13 @@ gymnasium = ">=0.28.1,<1.0"
 stable-baselines3 = ">=2.1.0,<3.0"
 tensorboard = "*"
 upkie = ">=6,<7"
+
+[tool.pixi.feature.pack.dependencies]
+pixi-pack = "*"
+
+[tool.pixi.feature.pack.tasks]
+pack-to-upkie = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
+
+[tool.pixi.environments]
+default = { features = [], solve-group = "default" }
+pack = { features = ["pack"], solve-group = "default" }
