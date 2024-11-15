@@ -75,6 +75,24 @@ make tensorboard
 
 You should increase the number of environments from the default value (``NB_TRAINING_ENVS`` in the Makefile) to "as much as you can as long as FPS keeps going up".
 
+## Export dependencies to Upkie
+
+PPO balancer use [pixi-pack](https://github.com/Quantco/pixi-pack/) to export pixi environment to Upkie.
+
+To create the `environment.tar` run the following command:
+
+```bash
+pixi run pack-to-upkie
+```
+
+Then, upload it to Upkie and unpack it with the following command:
+
+```bash
+pixi-pack unpack environment.tar
+```
+
+If pixi-pack is not installed on Upkie, you can get the binary on the [pixi-pack release page](https://github.com/Quantco/pixi-pack/releases).
+
 ## Troubleshooting
 
 ### Shared object file not found
