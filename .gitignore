@@ -8,3 +8,4 @@ training/
 # pixi environments
 .pixi
 *.egg-info
+environment.tar

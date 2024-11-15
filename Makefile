@@ -61,11 +61,11 @@ run_policy:  ### run saved policy on the real robot
 	$(RASPUNZEL) run -v -s //ppo_balancer:run
 .PHONY: upload
 
-upload: check_upkie_name build  ## upload agent to the robot
+upload: check_upkie_name  ## upload agent to the robot
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
 	ssh ${UPKIE_NAME} mkdir -p $(CURDIR_NAME)
 	ssh ${UPKIE_NAME} sudo find $(CURDIR_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude $(TRAINING_DIRNAME)/ --progress $(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(CURDIR_NAME)/ --exclude .pixi --exclude $(TRAINING_DIRNAME)/ --progress $(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
 
 tensorboard:  ## Start tensorboard on today's trainings
 	rm -f $(TRAINING_PATH)/today
