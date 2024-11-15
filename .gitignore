@@ -4,3 +4,8 @@ cache/
 conda_env.tar.gz
 tools/bazel
 training/
+
+# pixi environments
+.pixi
+*.egg-info
+environment.tar
