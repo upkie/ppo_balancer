@@ -13,11 +13,10 @@ from typing import Tuple
 import gin
 import gymnasium as gym
 import numpy as np
+import upkie.envs
 from envs import make_ppo_balancer_env
 from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3 import PPO
-
-import upkie.envs
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.robot_state import RobotState
 from upkie.utils.robot_state_randomization import RobotStateRandomization
@@ -41,7 +40,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
         "--training",
         default=False,
         action="store_true",
-        help="add noise and delays as in training",
+        help="add noise and actuation lag, as in training",
     )
     return parser.parse_args()
 
@@ -82,11 +81,11 @@ def run_policy(env: gym.Wrapper, policy) -> None:
     while True:
         action, _ = policy.predict(observation, deterministic=True)
         tip_position, tip_velocity = get_tip_state(observation[-1])
-        env.log("action", action)
-        env.log("observation", observation[-1])
-        env.log("reward", reward)
-        env.log("tip_position", tip_position)
-        env.log("tip_velocity", tip_velocity)
+        env.unwrapped.log("action", action)
+        env.unwrapped.log("observation", observation[-1])
+        env.unwrapped.log("reward", reward)
+        env.unwrapped.log("tip_position", tip_position)
+        env.unwrapped.log("tip_velocity", tip_velocity)
         observation, reward, terminated, truncated, info = env.step(action)
         if terminated or truncated:
             observation, info = env.reset()
