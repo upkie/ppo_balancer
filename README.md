@@ -77,21 +77,21 @@ You should increase the number of environments from the default value (``NB_TRAI
 
 ## Export dependencies to your Upkie
 
-PPO balancer uses [pixi-pack](https://github.com/Quantco/pixi-pack/) to export a pixi environment to your Upkie.
+PPO balancer uses `pixi-pack` to export a pixi environment to your Upkie. If you don't have it yet, you can install pixi from [here](https://pixi.sh/latest/#installation).
 
-To create the `environment.tar`, run the following command:
+First, create an `environment.tar` file with the following command:
 
 ```bash
 pixi run pack-to-upkie
 ```
 
-Then, upload it to your Upkie and unpack it with the following command:
+Then, upload it to your Upkie and unpack it by:
 
 ```bash
 pixi-pack unpack environment.tar
 ```
 
-If `pixi-pack` is not installed, you can get the binary from the [pixi-pack release page](https://github.com/Quantco/pixi-pack/releases). Finally, activate the environment and run the agent:
+If `pixi-pack` is not installed on your Upkie, you can get a `pixi-pack-aarch64-unknown-linux-gnu` binary from the [pixi-pack release page](https://github.com/Quantco/pixi-pack/releases). Finally, activate the environment and run the agent:
 
 ```bash
 source ./activate.sh
