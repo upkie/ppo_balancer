@@ -27,7 +27,7 @@ To run the default policy:
 make test_policy
 ```
 
-Here we assumed the spine is already up and running, for instance by running ``./start_simulation.sh`` from [upkie](https://github.com/upkie/upkie) on your machine, or by starting a pi3hat spine on the robot.
+Here we assumed the spine is already up and running, for instance by running `./start_simulation.sh` on your machine, or by starting a pi3hat spine on the robot.
 
 To run a policy saved to a custom path, use for instance:
 
@@ -37,21 +37,20 @@ python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
 
 ## On a real robot
 
-To build and upload your policy to the robot:
+Upload the agent repository to the robot:
 
 ```console
-$ make build
-$ make upload
+make upload
 ```
 
 Then, SSH into the robot and run the following target:
 
 ```console
 $ ssh your-upkie
-user@your-upkie:~$ make run_ppo_balancer
+user@your-upkie:~$ python ppo_balancer/run.py
 ```
 
-This will run the policy saved at the default path. To run a custom policy, save its ZIP file to ``ppo_balancer/policy/params.zip`` (save its operative config as well) and follow the same steps.
+This will run the policy saved at the default path. To run a custom policy, save its ZIP file to the robot (save its operative config as well for your future reference) and pass it path as argument to `run.py`.
 
 ## Training a new policy
 
