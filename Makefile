@@ -4,7 +4,9 @@
 
 PROJECT_NAME = ppo_balancer
 
-# Adjust the number of training env. for best performance on your machine:
+# You can adjust the number of training environments for best performance on
+# your machine, either by editing this file or by passing it to the `make`
+# command, e.g. `make <your_target> NB_TRAINING_ENVS=<new_value>`.
 NB_TRAINING_ENVS = 6
 
 # Programs
