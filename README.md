@@ -97,20 +97,7 @@ source ./activate.sh
 python ppo_balancer/run.py
 ```
 
-## Troubleshooting
+## Q&A
 
-### Shared object file not found
-
-**Symptom:** you are getting errors related to PyTorch not finding shared object files, with a call to ``_preload_cuda_deps()`` somewhere in the traceback:
-
-```
-  File ".../torch/__init__.py", line 178, in _load_global_deps
-    _preload_cuda_deps()
-  File ".../torch/__init__.py", line 158, in _preload_cuda_deps
-    ctypes.CDLL(cublas_path)
-  File "/usr/lib/python3.10/ctypes/__init__.py", line 374, in __init__
-    self._handle = _dlopen(self._name, mode)
-OSError: .../nvidia/cublas/lib/libcublas.so.11: cannot open shared object file: No such file or directory
-```
-
-**Workaround:** ``pip install torch`` in your local pip environment. This will override Bazel's and allow you to train and run normally.
+- [Why aren't simulations deterministic when the policy is deterministic?](https://github.com/upkie/ppo_balancer/issues/7)
+- [Error: Shared object file not found](https://github.com/upkie/ppo_balancer/issues/8)
