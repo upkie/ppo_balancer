@@ -99,5 +99,5 @@ python ppo_balancer/run.py
 
 ## Q&A
 
-- [Why aren't simulations deterministic when the policy is deterministic?](https://github.com/upkie/ppo_balancer/issues/7)
+- [Why aren't simulations deterministic when the policy is deterministic?](https://github.com/orgs/upkie/discussions/471)
 - [Error: Shared object file not found](https://github.com/upkie/ppo_balancer/issues/8)
