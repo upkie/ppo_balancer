@@ -72,10 +72,10 @@ tensorboard:  ## Start tensorboard on today's trainings
 	xdg-open http://localhost:6006 &
 	tensorboard --logdir $(TRAINING_PATH)/$(TRAINING_DATE)
 
-train:  ## train a new policy
+train_faster:  ## train a new policy without simulation GUI (faster)
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS)
 
-train_and_show:  ## train a new policy with simulations shown (slower)
+train_slower:  ## train a new policy with simulations shown (slower)
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS) --show
 
 environment.tar:
