@@ -19,6 +19,7 @@ py_library(
         ":config",
     ],
     deps = [
+        "//ppo_balancer/wrappers",
         "@upkie//upkie/envs",
         "@upkie//upkie/envs/wrappers",
     ],
