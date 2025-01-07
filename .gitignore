@@ -1,13 +1,10 @@
-__pycache__
-bazel-*
-cache/
-conda_env.tar.gz
-tools/bazel
-training/
-
-# pixi and pixi-pack
 *.egg-info
 .pixi
+__pycache__
 activate.sh
+bazel-*
+cache/
 env/
 environment.tar
+tools/bazel
+training/
