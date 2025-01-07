@@ -36,8 +36,6 @@ user@your-upkie:~$ cd ppo_balancer
 user@your-upkie:ppo_balancer$ make unpack_pixi_env
 ```
 
-You will then be able to run a policy on your Upkie.
-
 ## Running a policy
 
 ### On your machine
@@ -94,29 +92,6 @@ make tensorboard
 ```
 
 You should increase the number of environments from the default value (``NB_TRAINING_ENVS`` in the Makefile) to "as much as you can as long as FPS keeps going up".
-
-## Export dependencies to your Upkie
-
-PPO balancer uses `pixi-pack` to export a pixi environment to your Upkie. If you don't have it yet, you can install pixi from [here](https://pixi.sh/latest/#installation).
-
-First, create an `environment.tar` file with the following command:
-
-```bash
-pixi run pack-to-upkie
-```
-
-Then, upload it to your Upkie and unpack it by:
-
-```bash
-pixi-pack unpack environment.tar
-```
-
-If `pixi-pack` is not installed on your Upkie, you can get a `pixi-pack-aarch64-unknown-linux-gnu` binary from the . Finally, activate the environment and run the agent:
-
-```bash
-source ./activate.sh
-python ppo_balancer/run.py
-```
 
 ## See also
 
