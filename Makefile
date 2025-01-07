@@ -13,7 +13,6 @@ NB_TRAINING_ENVS = 6
 BAZEL = $(CURDIR)/tools/bazelisk
 BROWSER = firefox
 PYTHON = python3
-RASPUNZEL = $(CURDIR)/tools/raspunzel
 
 CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
@@ -58,7 +57,7 @@ clean:  ## clean intermediate build files
 	$(BAZEL) clean --expunge
 
 run_policy:  ### run saved policy on the real robot
-	$(RASPUNZEL) run -v -s //ppo_balancer:run
+	. $(CURDIR)/activate.sh && python ppo_balancer/run.py
 
 .PHONY: upload
 upload: check_upkie_name  ## upload agent to the robot
