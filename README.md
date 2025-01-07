@@ -43,7 +43,7 @@ user@your-upkie:ppo_balancer$ make unpack_pixi_env
 To run the default policy:
 
 ```console
-make test_policy
+make run_agent
 ```
 
 Here we assumed the spine is already up and running, for instance by running `./start_simulation.sh` on your machine, or by starting a pi3hat spine on the robot.
@@ -56,17 +56,11 @@ python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
 
 ## On your Upkie
 
-Upload the agent repository to the robot:
-
-```console
-make upload
-```
-
-Then, SSH into the robot and run the following target:
+Once the agent and Python environment have been uploaded with the instructions above, you can SSH into the robot and run the same target:
 
 ```console
 $ ssh user@your-upkie
-user@your-upkie:~$ make run_policy
+user@your-upkie:~$ make run_agent
 ```
 
 This will run the policy saved at the default path. To run a custom policy, save its ZIP file to the robot (save its operative config as well for your future reference) and pass it path as argument to `run.py`.
