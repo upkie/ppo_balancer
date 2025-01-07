@@ -80,3 +80,20 @@ train:  ## train a new policy
 
 train_and_show:  ## train a new policy with simulations shown (slower)
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS) --show
+
+environment.tar:
+	@pixi run pack-to-upkie || { \
+		echo "Error: pixi not found"; \
+		echo "See https://pixi.sh/latest/#installation"; \
+		exit 1; \
+	}
+
+pack_pixi_env: environment.tar  ## pack Python environment to be deployed on your Upkie
+
+.PHONY: unpack_pixi_env
+unpack_pixi_env:  ### unpack Python environment here
+	@pixi-pack unpack environment.tar || { \
+		echo "Error: pixi-pack not found"; \
+		echo "You can download `pixi-pack-aarch64-unknown-linux-gnu` from https://github.com/Quantco/pixi-pack/releases"; \
+		exit 1; \
+	}
