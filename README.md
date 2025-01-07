@@ -12,10 +12,31 @@ An overview video of the training pipeline is given in this video: [Sim-to-real 
 
 ## Installation
 
+### On your machine
+
 ```console
 conda env create -f environment.yaml
 conda activate ppo_balancer
 ```
+
+### On your Upkie
+
+The PPO balancer uses [pixi](https://pixi.sh/latest/#installation) and [pixi-pack](https://github.com/Quantco/pixi-pack/releases) to pack a standalone Python environment to run policies on your Upkie. First, create `environment.tar` and upload it by:
+
+```console
+make pack_pixi_env
+make upload
+```
+
+Then, unpack the remote environment:
+
+```console
+$ ssh user@your-upkie
+user@your-upkie:~$ cd ppo_balancer
+user@your-upkie:ppo_balancer$ make unpack_pixi_env
+```
+
+You will then be able to run a policy on your Upkie.
 
 ## Running a policy
 
@@ -35,7 +56,7 @@ To run a policy saved to a custom path, use for instance:
 python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
 ```
 
-## On a real robot
+## On your Upkie
 
 Upload the agent repository to the robot:
 
@@ -46,8 +67,8 @@ make upload
 Then, SSH into the robot and run the following target:
 
 ```console
-$ ssh your-upkie
-user@your-upkie:~$ python ppo_balancer/run.py
+$ ssh user@your-upkie
+user@your-upkie:~$ make run_policy
 ```
 
 This will run the policy saved at the default path. To run a custom policy, save its ZIP file to the robot (save its operative config as well for your future reference) and pass it path as argument to `run.py`.
@@ -90,14 +111,15 @@ Then, upload it to your Upkie and unpack it by:
 pixi-pack unpack environment.tar
 ```
 
-If `pixi-pack` is not installed on your Upkie, you can get a `pixi-pack-aarch64-unknown-linux-gnu` binary from the [pixi-pack release page](https://github.com/Quantco/pixi-pack/releases). Finally, activate the environment and run the agent:
+If `pixi-pack` is not installed on your Upkie, you can get a `pixi-pack-aarch64-unknown-linux-gnu` binary from the . Finally, activate the environment and run the agent:
 
 ```bash
 source ./activate.sh
 python ppo_balancer/run.py
 ```
 
-## Q&A
+## See also
 
 - [Why aren't simulations deterministic when the policy is deterministic?](https://github.com/orgs/upkie/discussions/471)
 - [Error: Shared object file not found](https://github.com/upkie/ppo_balancer/issues/8)
+- [Packing pixi environments for the Raspberry Pi](https://github.com/orgs/upkie/discussions/467)
