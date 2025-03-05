@@ -11,7 +11,6 @@ NB_TRAINING_ENVS = 6
 
 # Programs
 BAZEL = $(CURDIR)/tools/bazelisk
-BROWSER = firefox
 PYTHON = python3
 
 CURDATE = $(shell date -Iseconds)
@@ -70,7 +69,7 @@ upload: check_upkie_name  ## upload agent to the robot
 tensorboard:  ## Start tensorboard on today's trainings
 	rm -f $(TRAINING_PATH)/today
 	ln -sf $(TRAINING_PATH)/$(TRAINING_DATE) $(TRAINING_PATH)/today
-	$(BROWSER) http://localhost:6006 &
+	xdg-open http://localhost:6006 &
 	tensorboard --logdir $(TRAINING_PATH)/$(TRAINING_DATE)
 
 train:  ## train a new policy
