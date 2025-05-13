@@ -6,7 +6,7 @@ SCRIPTDIR=$(dirname "${SCRIPT}")
 URL_ARCHIVE="https://github.com/upkie/upkie/releases/download"
 
 # no v at start of version number here
-VERSION=6.0.0
+VERSION=8.0.0
 
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
