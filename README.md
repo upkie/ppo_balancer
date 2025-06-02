@@ -36,9 +36,7 @@ user@your-upkie:~$ cd ppo_balancer
 user@your-upkie:ppo_balancer$ make unpack_pixi_env
 ```
 
-## Running a policy
-
-### On your machine
+## Usage
 
 To run the default policy:
 
@@ -48,24 +46,7 @@ make run_agent
 
 Here we assumed the spine is already up and running, for instance by running `./start_simulation.sh` on your machine, or by starting a pi3hat spine on the robot.
 
-To run a policy saved to a custom path, use for instance:
-
-```console
-python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
-```
-
-## On your Upkie
-
-Once the agent and Python environment have been uploaded with the instructions above, you can SSH into the robot and run the same target:
-
-```console
-$ ssh user@your-upkie
-user@your-upkie:~$ make run_agent
-```
-
-This will run the policy saved at the default path. To run a custom policy, save its ZIP file to the robot (save its operative config as well for your future reference) and pass it path as argument to `run.py`.
-
-## Training a new policy
+### Training a new policy
 
 First, check that training progresses one rollout at a time:
 
@@ -73,19 +54,27 @@ First, check that training progresses one rollout at a time:
 make train_and_show
 ```
 
-Once this works you can train for real, with more environments and no GUI:
+Once this works, train for real with more environments and no GUI:
 
 ```console
 make train
 ```
 
-Check out the `time/fps` plots in the command line or in TensorBoard to adjust the number of parallel environments:
+Adjust the number of parallel environments based on the `time/fps` series. The series is reported to the command line, as well as to TensorBoard which you can start by:
 
 ```console
 make tensorboard
 ```
 
-You should increase the number of environments from the default value (``NB_TRAINING_ENVS`` in the Makefile) to "as much as you can as long as FPS keeps going up".
+Increase the number of environments from the default value (``NB_TRAINING_ENVS`` in the Makefile) to "as much as you can as long as FPS keeps going up".
+
+### Advanced usage
+
+To run a policy saved to a custom path, use for instance:
+
+```console
+python ppo_balancer/run.py --policy ppo_balancer/training/2023-11-15/final.zip
+```
 
 ## See also
 
