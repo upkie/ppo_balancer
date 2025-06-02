@@ -48,6 +48,7 @@ build: clean_broken_links
 
 clean:  ## clean intermediate build files
 	$(BAZEL) clean --expunge
+	rm -f environment.tar
 
 upload: check_upkie_name  ## upload agent to the robot
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
@@ -85,16 +86,14 @@ environment.tar:
 		exit 1; \
 	}
 
-$(CURDIR)/activate.sh:
+pack_pixi_env: environment.tar  ## pack Python environment to be deployed to your Upkie
+
+unpack_pixi_env:  ### unpack Python environment
 	@pixi-pack unpack environment.tar || { \
 		echo "Error: pixi-pack not found"; \
 		echo "You can download `pixi-pack-aarch64-unknown-linux-gnu` from https://github.com/Quantco/pixi-pack/releases"; \
 		exit 1; \
 	}
-
-pack_pixi_env: environment.tar  ## pack Python environment to be deployed to your Upkie
-
-unpack_pixi_env: $(CURDIR)/activate.sh  ### unpack Python environment
 
 run_agent:  ### run saved policy
 	@if [ -f $(CURDIR)/activate.sh ]; then \
