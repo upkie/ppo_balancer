@@ -17,7 +17,9 @@ import gymnasium
 import numpy as np
 import stable_baselines3
 import upkie.envs
+import upkie.envs.rewards
 from envs import make_ppo_balancer_env
+from reward_wrapper import RewardWrapper
 from rules_python.python.runfiles import runfiles
 from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
@@ -176,30 +178,31 @@ def init_env(
 
         # parent process: trainer
         agent_frequency = env_settings.agent_frequency
-        velocity_env = gymnasium.make(
+        base_env = gymnasium.make(
             env_settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
             frequency=agent_frequency,
             regulate_frequency=False,
-            reward=upkie.envs.rewards.WheeledInvertedPendulumReward(
-                position_weight=env_settings.reward["position_weight"],
-                velocity_weight=env_settings.reward["velocity_weight"],
-            ),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
             max_ground_velocity=env_settings.max_ground_velocity,
         )
-        velocity_env.reset(seed=seed)
-        velocity_env._prepatch_close = velocity_env.close
+        reward_env = RewardWrapper(
+            base_env,
+            position_weight=env_settings.reward["position_weight"],
+            velocity_weight=env_settings.reward["velocity_weight"],
+        )
+        reward_env.reset(seed=seed)
+        reward_env._prepatch_close = reward_env.close
 
         def close_monkeypatch():
             logging.info(f"Terminating spine {shm_name} with {pid=}...")
             os.kill(pid, signal.SIGINT)  # interrupt spine child process
             os.waitpid(pid, 0)  # wait for spine to terminate
-            velocity_env._prepatch_close()
+            reward_env._prepatch_close()
 
-        velocity_env.close = close_monkeypatch
-        env = make_ppo_balancer_env(velocity_env, env_settings, training=True)
+        reward_env.close = close_monkeypatch
+        env = make_ppo_balancer_env(reward_env, env_settings, training=True)
         return Monitor(env)
 
     set_random_seed(seed)
