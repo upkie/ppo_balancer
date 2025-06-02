@@ -13,9 +13,7 @@ import gin
 @gin.configurable
 @dataclass
 class EnvSettings:
-    """!
-    Environment settings.
-    """
+    """Environment settings."""
 
     accel_penalty: float
     action_lpf: Tuple[float, float]

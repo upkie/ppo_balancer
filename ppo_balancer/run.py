@@ -25,10 +25,10 @@ upkie.envs.register()
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
-    """!
-    Parse command line arguments.
+    """Parse command line arguments.
 
-    @returns Command-line arguments.
+    Returns:
+        Command-line arguments.
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -48,14 +48,16 @@ def parse_command_line_arguments() -> argparse.Namespace:
 def get_tip_state(
     observation, tip_height: float = 0.58
 ) -> Tuple[float, float]:
-    """!
-    Compute the state of the virtual tip used in the agent's reward.
+    """Compute the state of the virtual tip used in the agent's reward.
 
     This extra info is for logging only.
 
-    @param observation Observation vector.
-    @param tip_height Height of the virtual tip.
-    @returns Pair of tip (position, velocity) in the sagittal plane.
+    Args:
+        observation Observation vector.
+        tip_height Height of the virtual tip.
+
+    Returns:
+        Pair of tip (position, velocity) in the sagittal plane.
     """
     pitch = observation[0]
     ground_position = observation[1]
@@ -69,11 +71,11 @@ def get_tip_state(
 
 
 def run_policy(env: gym.Wrapper, policy) -> None:
-    """!
-    Run the policy on a given environment.
+    """Run the policy on a given environment.
 
-    @param env Upkie environment, wrapped by the agent.
-    @param policy MLP policy to follow.
+    Args:
+        env: Upkie environment, wrapped by the agent.
+        policy: MLP policy to follow.
     """
     action = np.zeros(env.action_space.shape)
     observation, info = env.reset()
@@ -92,11 +94,11 @@ def run_policy(env: gym.Wrapper, policy) -> None:
 
 
 def main(policy_path: str, training: bool) -> None:
-    """!
-    Load environment and policy, and run the latter on the former.
+    """Load environment and policy, and run the latter on the former.
 
-    @param policy_path Path to policy parameters.
-    @param training If True, add training noise and domain randomization.
+    Args:
+        policy_path: Path to policy parameters.
+        training: If True, add training noise and domain randomization.
     """
     env_settings = EnvSettings()
     init_state = None

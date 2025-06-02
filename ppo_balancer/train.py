@@ -132,12 +132,14 @@ def get_random_word():
 
 
 def get_bullet_argv(shm_name: str, show: bool) -> List[str]:
-    """!
-    Get command-line arguments for the Bullet spine.
+    """Get command-line arguments for the Bullet spine.
 
-    @param shm_name Name of the shared-memory file.
-    @param show If true, show simulator GUI.
-    @returns Command-line arguments.
+    Args:
+        shm_name: Name of the shared-memory file.
+        show: If true, show simulator GUI.
+
+    Returns:
+        Command-line arguments.
     """
     env_settings = EnvSettings()
     agent_frequency = env_settings.agent_frequency
@@ -158,12 +160,13 @@ def init_env(
     show: bool,
     spine_path: str,
 ):
-    """!
+    """
     Get an environment initialization function for a set of parameters.
 
-    @param max_episode_duration Maximum duration of an episode, in seconds.
-    @param show If true, show simulator GUI.
-    @param spine_path Path to the Bullet spine binary.
+    Args:
+        max_episode_duration: Maximum duration of an episode, in seconds.
+        show: If true, show simulator GUI.
+        spine_path: Path to the Bullet spine binary.
     """
     env_settings = EnvSettings()
     seed = random.randint(0, 1_000_000)
@@ -220,21 +223,25 @@ def find_save_path(training_dir: str, policy_name: str):
 
 
 def affine_schedule(y_0: float, y_1: float) -> Callable[[float], float]:
-    """!
-    Affine schedule as a function over the [0, 1] interval.
+    """Affine schedule as a function over the [0, 1] interval.
 
-    @param y_0 Function value at zero.
-    @param y_1 Function value at one.
-    @return Corresponding affine function.
+    Args:
+        y_0 Function value at zero.
+        y_1 Function value at one.
+
+    Returns:
+        Corresponding affine function.
     """
     diff = y_1 - y_0
 
     def schedule(x: float) -> float:
-        """!
-        Compute the current learning rate from remaining progress.
+        """Compute the current learning rate from remaining progress.
 
-        @param x Progress decreasing from 1 (beginning) to 0.
-        @return Corresponding learning rate>
+        Args:
+            x: Progress decreasing from 1 (beginning) to 0.
+
+        Returns:
+            Corresponding learning rate.
         """
         return y_0 + x * diff
 
@@ -247,13 +254,13 @@ def train_policy(
     nb_envs: int,
     show: bool,
 ) -> None:
-    """!
-    Train a new policy and save it to a directory.
+    """Train a new policy and save it to a directory.
 
-    @param policy_name Name of the trained policy.
-    @param training_dir Directory for logging and saving policies.
-    @param nb_envs Number of environments, each running in a separate process.
-    @param show Whether to show the simulation GUI.
+    Args:
+        policy_name: Name of the trained policy.
+        training_dir: Directory for logging and saving policies.
+        nb_envs: Number of environments, each running in a separate process.
+        show: Whether to show the simulation GUI.
     """
     if policy_name == "":
         policy_name = get_random_word()
