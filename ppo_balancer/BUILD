@@ -34,8 +34,7 @@ py_binary(
     imports = ["."],
 
     data = [
-        "policy/operative_config.gin",
-        "policy/params.zip",
+        "//policy",
     ],
     deps = [
         "@upkie//upkie/envs",

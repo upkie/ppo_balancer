@@ -67,7 +67,7 @@ upload: check_upkie_name  ## upload agent to the robot
 		--progress \
 		$(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
 
-tensorboard:  ## Start tensorboard on today's trainings
+tensorboard:  ## Start TensorBoard on today's trainings
 	rm -f $(TRAINING_PATH)/today
 	ln -sf $(TRAINING_PATH)/$(TRAINING_DATE) $(TRAINING_PATH)/today
 	xdg-open http://localhost:6006 &
@@ -79,14 +79,12 @@ train:  ## train a new policy
 train_and_show:  ## train a new policy with simulations shown (slower)
 	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS) --show
 
-environment.tar:
+pack_pixi_env:  ## pack Python environment to be deployed to your Upkie
 	@pixi run pack-to-upkie || { \
 		echo "Error: pixi not found"; \
 		echo "See https://pixi.sh/latest/#installation"; \
 		exit 1; \
 	}
-
-pack_pixi_env: environment.tar  ## pack Python environment to be deployed to your Upkie
 
 unpack_pixi_env:  ### unpack Python environment
 	@pixi-pack unpack environment.tar || { \
