@@ -348,6 +348,7 @@ def train_policy(
                 "vf": ppo_settings.net_arch_vf,
             },
         },
+        device="cpu",
         verbose=1,
     )
 
