@@ -19,8 +19,7 @@ import numpy as np
 import stable_baselines3
 import upkie.envs
 import upkie.envs.rewards
-from envs import make_ppo_balancer_env
-from reward_wrapper import RewardWrapper
+from define_reward import DefineReward
 from rules_python.python.runfiles import runfiles
 from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
@@ -31,6 +30,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from upkie.utils.spdlog import logging
+from wrap_velocity_env import wrap_velocity_env
 
 upkie.envs.register()
 
@@ -191,7 +191,7 @@ def init_env(
             spine_config=env_settings.spine_config,
             max_ground_velocity=env_settings.max_ground_velocity,
         )
-        reward_env = RewardWrapper(
+        reward_env = DefineReward(
             base_env,
             position_weight=env_settings.reward["position_weight"],
             velocity_weight=env_settings.reward["velocity_weight"],
@@ -206,7 +206,7 @@ def init_env(
             reward_env._prepatch_close()
 
         reward_env.close = close_monkeypatch
-        env = make_ppo_balancer_env(reward_env, env_settings, training=True)
+        env = wrap_velocity_env(reward_env, env_settings, training=True)
         return Monitor(env)
 
     set_random_seed(seed)

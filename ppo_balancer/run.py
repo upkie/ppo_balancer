@@ -118,7 +118,7 @@ def main(policy_path: str, training: bool) -> None:
         regulate_frequency=True,
         spine_config=env_settings.spine_config,
     ) as velocity_env:
-        env = make_ppo_balancer_env(
+        env = wrap_velocity_env(
             velocity_env,
             env_settings,
             training=training,

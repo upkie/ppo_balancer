@@ -48,7 +48,7 @@ py_binary(
 py_binary(
     name = "train",
     srcs = [
-        "reward_wrapper.py",
+        "define_reward.py",
         "train.py",
     ],
     main = "train.py",

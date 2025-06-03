@@ -10,7 +10,7 @@ from gymnasium.core import ActType, ObsType
 from upkie.envs.wrappers import ObservationBasedReward
 
 
-class RewardWrapper(ObservationBasedReward):
+class DefineReward(ObservationBasedReward):
     """Define the agent's reward function."""
 
     position_weight: float
