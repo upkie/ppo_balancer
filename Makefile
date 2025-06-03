@@ -68,8 +68,6 @@ upload: check_upkie_name  ## upload agent to the robot
 		$(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
 
 tensorboard:  ## Start TensorBoard on today's trainings
-	rm -f $(TRAINING_PATH)/today
-	ln -sf $(TRAINING_PATH)/$(TRAINING_DATE) $(TRAINING_PATH)/today
 	xdg-open http://localhost:6006 &
 	tensorboard --logdir $(TRAINING_PATH)/$(TRAINING_DATE)
 

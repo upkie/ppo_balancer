@@ -395,8 +395,8 @@ def train_policy(
     # Save policy no matter what!
     policy.save(f"{save_path}/final.zip")
     policy.env.close()
-    deploy_policy(save_path)
     write_policy_makefile(save_path)
+    deploy_policy(save_path)
 
 
 def deploy_policy(policy_path: str):
