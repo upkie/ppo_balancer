@@ -35,8 +35,7 @@ upkie.envs.register()
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
-    """
-    Parse command line arguments.
+    """Parse command line arguments.
 
     Returns:
         Command-line arguments.
@@ -160,8 +159,7 @@ def init_env(
     show: bool,
     spine_path: str,
 ):
-    """
-    Get an environment initialization function for a set of parameters.
+    """Get an environment initialization function for a set of parameters.
 
     Args:
         max_episode_duration: Maximum duration of an episode, in seconds.
