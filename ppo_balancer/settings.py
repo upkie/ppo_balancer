@@ -15,7 +15,6 @@ import gin
 class EnvSettings:
     """Environment settings."""
 
-    accel_penalty: float
     action_lpf: Tuple[float, float]
     action_noise: List[float]
     agent_frequency: int
