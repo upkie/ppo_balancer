@@ -142,13 +142,14 @@ if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
 
-    agent_dir = os.path.abspath(os.path.dirname(__file__))
     args = parse_command_line_arguments()
 
     # Policy parameters
     policy_path = args.policy
     if policy_path is None:
-        policy_path = f"{agent_dir}/policy/params.zip"
+        script_dir = os.path.abspath(os.path.dirname(__file__))
+        policy_dir = os.path.join(os.path.dirname(script_dir), "policy")
+        policy_path = f"{policy_dir}/params.zip"
     if policy_path.endswith(".zip"):
         policy_path = policy_path[:-4]
     logging.info("Loading policy from %s.zip", policy_path)
