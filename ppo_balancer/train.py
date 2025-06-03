@@ -8,6 +8,7 @@ import argparse
 import datetime
 import os
 import random
+import shutil
 import signal
 import tempfile
 from typing import Callable, List
@@ -32,6 +33,8 @@ from torch import nn
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
+
+TRAINING_PATH = os.environ.get("UPKIE_TRAINING_PATH", tempfile.gettempdir())
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -248,7 +251,6 @@ def affine_schedule(y_0: float, y_1: float) -> Callable[[float], float]:
 
 def train_policy(
     policy_name: str,
-    training_dir: str,
     nb_envs: int,
     show: bool,
 ) -> None:
@@ -256,15 +258,25 @@ def train_policy(
 
     Args:
         policy_name: Name of the trained policy.
-        training_dir: Directory for logging and saving policies.
         nb_envs: Number of environments, each running in a separate process.
         show: Whether to show the simulation GUI.
     """
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    training_dir = f"{TRAINING_PATH}/{date}"
+    logging.info("Logging training data in %s", training_dir)
+    logging.info(
+        "To track in TensorBoard, run "
+        f"`tensorboard --logdir {training_dir}`"
+    )
+    today_path = os.path.join(TRAINING_PATH, "today")
+    if os.path.exists(today_path):
+        os.remove(today_path)
+    target_path = os.path.join(TRAINING_PATH, date)
+    os.symlink(target_path, today_path)
+
     if policy_name == "":
         policy_name = get_random_word()
-    save_path = find_save_path(training_dir, policy_name)
     logging.info('New policy name is "%s"', policy_name)
-    logging.info("Training data will be logged to %s", save_path)
 
     training = TrainingSettings()
     deez_runfiles = runfiles.Create()
@@ -339,6 +351,10 @@ def train_policy(
         verbose=1,
     )
 
+    save_path = find_save_path(training_dir, policy_name)
+    logging.info("Training data will be logged to %s", save_path)
+    os.makedirs(save_path, exist_ok=True)
+
     try:
         policy.learn(
             total_timesteps=training.total_timesteps,
@@ -379,26 +395,47 @@ def train_policy(
     # Save policy no matter what!
     policy.save(f"{save_path}/final.zip")
     policy.env.close()
+    deploy_policy(save_path)
+    write_policy_makefile(save_path)
+
+
+def deploy_policy(policy_path: str):
+    deployment_path = os.path.abspath(f"{TRAINING_PATH}/../policy")
+    logging.info(
+        "Deploying policy from %s to %s", policy_path, deployment_path
+    )
+    shutil.copy(
+        f"{policy_path}/final.zip",
+        f"{TRAINING_PATH}/../policy/params.zip",
+    )
+    shutil.copy(
+        f"{policy_path}/operative_config.gin",
+        f"{TRAINING_PATH}/../policy/operative_config.gin",
+    )
+
+
+def write_policy_makefile(policy_path: str):
+    makefile_path = f"{policy_path}/Makefile"
+    logging.info("Saved policy Makefile to %s", makefile_path)
+    with open(makefile_path, "w") as makefile:
+        makefile.write(
+            """# Makefile
+
+help:
+\t@echo "Usage: `make deploy` to deploy the policy"
+
+deploy:
+\tcp -f $(CURDIR)/final.zip ../../../data/params.zip
+\tcp -f $(CURDIR)/operative_config.gin ../../../data/operative_config.gin"""
+        )
 
 
 if __name__ == "__main__":
     args = parse_command_line_arguments()
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/settings.gin")
-
-    training_path = os.environ.get(
-        "UPKIE_TRAINING_PATH", tempfile.gettempdir()
-    )
-    date = datetime.datetime.now().strftime("%Y-%m-%d")
-    training_dir = f"{training_path}/{date}"
-    logging.info("Logging training data in %s", training_dir)
-    logging.info(
-        "To track in TensorBoard, run "
-        f"`tensorboard --logdir {training_dir}`"
-    )
     train_policy(
         args.name,
-        training_dir,
         nb_envs=args.nb_envs,
         show=args.show,
     )

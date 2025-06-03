@@ -18,7 +18,7 @@ ppo_balancer = { path = ".", editable = true }
 
 [tool.pixi.dependencies]
 gin-config = ">=0.5.0"
-gymnasium = ">=0.28.1,<1.0"
+gymnasium = ">=1.0.0"
 stable-baselines3 = ">=2.1.0,<3.0"
 tensorboard = "*"
 upkie = ">=8,<9"
