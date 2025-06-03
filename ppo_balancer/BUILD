@@ -12,8 +12,8 @@ filegroup(
 py_library(
     name = "common",
     srcs = [
-        "envs.py",
         "settings.py",
+        "wrap_velocity_env.py",
     ],
     data = [
         ":config",

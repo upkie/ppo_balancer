@@ -14,12 +14,13 @@ import gin
 import gymnasium as gym
 import numpy as np
 import upkie.envs
-from envs import make_ppo_balancer_env
-from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3 import PPO
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.robot_state import RobotState
 from upkie.utils.robot_state_randomization import RobotStateRandomization
+
+from settings import EnvSettings, PPOSettings, TrainingSettings
+from wrap_velocity_env import wrap_velocity_env
 
 upkie.envs.register()
 
