@@ -14,14 +14,11 @@ An overview video of the training pipeline is given in this video: [Sim-to-real 
 
 ### On your machine
 
-```console
-conda env create -f environment.yaml
-conda activate ppo_balancer
-```
+Install [pixi](https://pixi.sh/latest/#installation).
 
 ### On your Upkie
 
-The PPO balancer uses [pixi](https://pixi.sh/latest/#installation) and [pixi-pack](https://github.com/Quantco/pixi-pack/releases) to pack a standalone Python environment to run policies on your Upkie. First, create `environment.tar` and upload it by:
+The PPO balancer uses [pixi-pack](https://github.com/Quantco/pixi-pack/releases) to pack a standalone Python environment to run policies on your Upkie. First, create `environment.tar` on your machine and upload it by:
 
 ```console
 make pack_pixi_env
@@ -38,10 +35,16 @@ user@your-upkie:ppo_balancer$ make unpack_pixi_env
 
 ## Usage
 
-To run the default policy:
+To run the deployed policy on your Upkie:
 
 ```console
-make run_agent
+make run_policy
+```
+
+Before that, to test the policy on your machine:
+
+```console
+pixi run policy
 ```
 
 Here we assumed the spine is already up and running, for instance by running `./start_simulation.sh` on your machine, or by starting a pi3hat spine on the robot.
@@ -51,22 +54,22 @@ Here we assumed the spine is already up and running, for instance by running `./
 First, check that training progresses one rollout at a time:
 
 ```console
-make train_and_show
+pixi run show_training
 ```
 
 Once this works, train for real with more environments and no GUI:
 
 ```console
-make train
+pixi run train <nb_envs>
 ```
 
-Adjust the number of parallel environments based on the `time/fps` series. The series is reported to the command line, as well as to TensorBoard which you can start by:
+Adjust the number `nb_envs` of parallel environments based on the `time/fps` series. The series is reported to the command line, as well as to TensorBoard which you can start by:
 
 ```console
 make tensorboard
 ```
 
-Increase the number of environments from the default value (``NB_TRAINING_ENVS`` in the Makefile) to "as much as you can as long as FPS keeps going up".
+Increase the number of environments from the default value to "as much as you can as long as FPS keeps going up".
 
 ### Advanced usage
 
