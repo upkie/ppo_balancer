@@ -29,6 +29,17 @@ pixi-pack = "*"
 [tool.pixi.feature.pack.tasks]
 pack-to-upkie = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel"
 
+[tool.pixi.tasks.policy]
+cmd = "python ppo_balancer/run.py"
+
+[tool.pixi.tasks.train]
+args = ["nb_envs"]
+cmd = "./tools/bazelisk run //ppo_balancer:train -- --nb-envs {{ nb_envs }}"
+
+[tool.pixi.tasks.show_training]
+args = ["nb_envs"]
+cmd = "./tools/bazelisk run //ppo_balancer:train -- --nb-envs {{ nb_envs }} --show"
+
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }

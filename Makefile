@@ -43,14 +43,11 @@ check_upkie_name:
 clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
 
-build: clean_broken_links
-	$(BAZEL) build --config=pi64 //ppo_balancer:run
-
-clean:  ## clean intermediate build files
+clean:  ## clean build and environment files
 	$(BAZEL) clean --expunge
 	rm -f environment.tar
 
-upload: check_upkie_name  ## upload agent to the robot
+upload: check_upkie_name  ## upload balancer to the robot
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
 	ssh ${UPKIE_NAME} mkdir -p $(CURDIR_NAME)
 	ssh ${UPKIE_NAME} sudo find $(CURDIR_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
@@ -71,12 +68,6 @@ tensorboard:  ## Start TensorBoard on today's trainings
 	xdg-open http://localhost:6006 &
 	tensorboard --logdir $(TRAINING_PATH)/$(TRAINING_DATE)
 
-train:  ## train a new policy
-	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS)
-
-train_and_show:  ## train a new policy with simulations shown (slower)
-	$(BAZEL) run //ppo_balancer:train -- --nb-envs $(NB_TRAINING_ENVS) --show
-
 pack_pixi_env:  ## pack Python environment to be deployed to your Upkie
 	@pixi run pack-to-upkie || { \
 		echo "Error: pixi not found"; \
@@ -91,7 +82,7 @@ unpack_pixi_env:  ### unpack Python environment
 		exit 1; \
 	}
 
-run_agent:  ### run saved policy
+run_policy:  ### run saved policy
 	@if [ -f $(CURDIR)/activate.sh ]; then \
 		echo ". $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py"; \
 		. $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py; \
