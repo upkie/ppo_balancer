@@ -4,15 +4,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
+from typing import Any, Dict, SupportsFloat, Tuple
+
+import gin
 import gymnasium as gym
 import numpy as np
 from gymnasium.core import ActType, ObsType
-from upkie.envs.wrappers import ObservationBasedReward
 
 
-class DefineReward(ObservationBasedReward):
+@gin.configurable
+class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
     """Define the agent's reward function."""
 
+    last_observation: ObsType
     position_weight: float
     velocity_weight: float
 
@@ -33,24 +37,55 @@ class DefineReward(ObservationBasedReward):
                 rewards are computed from, in meters.
         """
         super().__init__(env)
+        self.last_action = None
+        self.last_observation = None
         self.position_weight = position_weight
         self.velocity_weight = velocity_weight
         self.tip_height = tip_height
 
-    def reward(self, observation: ObsType, info: dict) -> float:
-        """Returns the new environment reward.
+    def reset(self, **kwargs) -> Tuple[ObsType, Dict[str, Any]]:
+        r"""!
+        Reset the environment.
 
-        Args:
-            observation: Latest observation from the environment.
-            info: Latest info dictionary from the environment.
-
-        Returns:
-            Reward.
+        \param kwargs Keyword arguments forwarded to the wrapped environment.
         """
-        pitch = observation[0]
-        ground_position = observation[1]
-        angular_velocity = observation[2]
-        ground_velocity = observation[3]
+        observation, info = self.env.reset(**kwargs)
+        self.last_observation = observation
+        return observation, info
+
+    def step(
+        self, action: ActType
+    ) -> Tuple[ObsType, SupportsFloat, bool, bool, Dict[str, Any]]:
+        r"""!
+        Modifies the :attr:`env` reward using :meth:`self.reward`.
+        """
+        observation, _, terminated, truncated, info = self.env.step(action)
+        reward = self.reward(self.last_observation, action, observation)
+        self.last_action = action
+        self.last_observation = observation
+        return (
+            observation,
+            reward,
+            terminated,
+            truncated,
+            info,
+        )
+
+    def reward(
+        self, obs: ObsType, action: ActType, new_obs: ObsType
+    ) -> SupportsFloat:
+        r"""!
+        Returns the new environment reward.
+
+        \param[in] obs Observation from which the action was computed.
+        \param[in] action Action that was taken.
+        \param[in] new_obs New observation after the action was taken.
+        \return The modified reward.
+        """
+        pitch = new_obs[0]
+        ground_position = new_obs[1]
+        angular_velocity = new_obs[2]
+        ground_velocity = new_obs[3]
         tip_height = self.tip_height
 
         tip_position = ground_position + tip_height * np.sin(pitch)
