@@ -18,21 +18,24 @@ class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
 
     last_observation: ObsType
     position_weight: float
+    smoothness_weight: float
     velocity_weight: float
 
     def __init__(
         self,
         env: gym.Env[ObsType, ActType],
-        position_weight: float = 1.0,
-        velocity_weight: float = 1.0,
-        tip_height: float = 0.58,
+        position_weight: float,
+        velocity_weight: float,
+        smoothness_weight: float,
+        tip_height: float,
     ):
         """Initialize with reward weights.
 
         Args:
             env: Environment whose reward to redefine.
-            position: Weight of the position term.
-            velocity: Weight of the velocity term.
+            position_weight: Weight of the position reward.
+            velocity_weight: Weight of the velocity reward.
+            smoothness_weight: Weight of the action-smoothness reward.
             tip_height: Height of the tip of the inverted pendulum model
                 rewards are computed from, in meters.
         """
@@ -40,8 +43,9 @@ class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         self.last_action = None
         self.last_observation = None
         self.position_weight = position_weight
-        self.velocity_weight = velocity_weight
+        self.smoothness_weight = smoothness_weight
         self.tip_height = tip_height
+        self.velocity_weight = velocity_weight
 
     def reset(self, **kwargs) -> Tuple[ObsType, Dict[str, Any]]:
         r"""!
@@ -97,8 +101,13 @@ class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         position_reward = np.exp(-((tip_position / std_position) ** 2))
         velocity_penalty = -abs(tip_velocity)
 
-        wip_reward = (
+        action_smoothness = 0.0
+        if self.last_action is not None:
+            action_change = action - self.last_action
+            action_smoothness = action_change.dot(action_change)
+
+        return (
             self.position_weight * position_reward
             + self.velocity_weight * velocity_penalty
+            + self.smoothness_weight * action_smoothness
         )
-        return wip_reward
