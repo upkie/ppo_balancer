@@ -4,6 +4,13 @@
 
 import settings
 
+# Parameters for DefineReward:
+# ==============================================================================
+DefineReward.position_weight = 1.0
+DefineReward.velocity_weight = 0.1
+DefineReward.smoothness_weight = 0.01
+DefineReward.tip_height = 0.58
+
 # Parameters for EnvSettings:
 # ==============================================================================
 EnvSettings.action_lpf = (0.05, 0.15)
@@ -14,10 +21,6 @@ EnvSettings.history_size = 10
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
 EnvSettings.observation_noise = [0.01, 0.01, 0.01, 0.01]
-EnvSettings.reward = {
-    "position_weight": 1.0,
-    "velocity_weight": 0.1,
-}
 EnvSettings.spine_config = {
     "bullet": {
         "torque_control": {

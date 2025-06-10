@@ -191,11 +191,7 @@ def init_env(
             spine_config=env_settings.spine_config,
             max_ground_velocity=env_settings.max_ground_velocity,
         )
-        reward_env = DefineReward(
-            base_env,
-            position_weight=env_settings.reward["position_weight"],
-            velocity_weight=env_settings.reward["velocity_weight"],
-        )
+        reward_env = DefineReward(base_env)
         reward_env.reset(seed=seed)
         reward_env._prepatch_close = reward_env.close
 

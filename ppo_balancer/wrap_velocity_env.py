@@ -41,10 +41,8 @@ def wrap_velocity_env(
             time_constant=spaces.Box(*env_settings.action_lpf),
         )
 
-    env = FrameStackObservation(
-        AddActionToObservation(env),
-        env_settings.history_size,
-    )
+    env = AddActionToObservation(env)
+    env = FrameStackObservation( env, env_settings.history_size)
     env = DifferentiateAction(
         env,
         min_derivative=-env_settings.max_ground_accel,
