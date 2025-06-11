@@ -403,6 +403,7 @@ def train_policy(
                     start_timestep=0,
                     end_timestep=1e5,
                 ),
+                RewardCallback(vec_env),
             ],
             tb_log_name=policy_name,
         )
