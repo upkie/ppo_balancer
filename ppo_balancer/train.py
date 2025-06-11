@@ -128,6 +128,10 @@ class SummaryWriterCallback(BaseCallback):
         # for functions called by the environment are logged as well.
         if self.n_calls != 1:
             return True
+
+        with gymnasium.make("CartPole-v1") as dummy_env:
+            _ = DefineReward(dummy_env)  # for the gin operative config
+        print("Gin operative config:", gin.operative_config_str())
         self.tb_formatter.writer.add_text(
             "gin/operative_config",
             gin.operative_config_str(),
