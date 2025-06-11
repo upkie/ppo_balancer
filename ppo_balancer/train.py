@@ -106,6 +106,8 @@ class RewardCallback(BaseCallback):
         ):
             reward = np.mean(self.vec_env.get_attr(f"last_{term}"))
             self.logger.record(f"rewards/{term}", reward)
+        reward = np.mean(self.vec_env.get_attr("last_reward"))
+        self.logger.record("rewards/reward", reward)
         return True
 
 
