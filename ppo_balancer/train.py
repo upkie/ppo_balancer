@@ -93,6 +93,22 @@ class InitRandomizationCallback(BaseCallback):
         return True
 
 
+class RewardCallback(BaseCallback):
+    def __init__(self, vec_env: VecEnv):
+        super().__init__()
+        self.vec_env = vec_env
+
+    def _on_step(self) -> bool:
+        for term in (
+            "position_reward",
+            "velocity_penalty",
+            "action_change_penalty",
+        ):
+            reward = np.mean(self.vec_env.get_attr(f"last_{term}"))
+            self.logger.record(f"rewards/{term}", reward)
+        return True
+
+
 class SummaryWriterCallback(BaseCallback):
     def __init__(self, vec_env: VecEnv, save_path: str):
         super().__init__()

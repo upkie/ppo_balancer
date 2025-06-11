@@ -41,7 +41,10 @@ class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         """
         super().__init__(env)
         self.last_action = None
+        self.last_action_change_penalty = 0.0
         self.last_observation = None
+        self.last_position_reward = 0.0
+        self.last_velocity_penalty = 0.0
         self.position_weight = position_weight
         self.smoothness_weight = smoothness_weight
         self.tip_height = tip_height
@@ -101,13 +104,19 @@ class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         position_reward = np.exp(-((tip_position / std_position) ** 2))
         velocity_penalty = -abs(tip_velocity)
 
-        action_smoothness = 0.0
+        action_change_penalty = 0.0
         if self.last_action is not None:
             action_change = action - self.last_action
-            action_smoothness = action_change.dot(action_change)
+            action_change_penalty = -action_change.dot(action_change)
 
-        return (
+        reward = (
             self.position_weight * position_reward
             + self.velocity_weight * velocity_penalty
-            + self.smoothness_weight * action_smoothness
+            + self.smoothness_weight * action_change_penalty
         )
+
+        self.last_position_reward = position_reward
+        self.last_velocity_penalty = velocity_penalty
+        self.last_action_change_penalty = action_change_penalty
+        self.last_reward = reward
+        return reward
