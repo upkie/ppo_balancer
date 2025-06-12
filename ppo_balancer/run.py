@@ -7,19 +7,18 @@
 
 import argparse
 import logging
-import os
+from pathlib import Path
 from typing import Tuple
 
 import gin
 import gymnasium as gym
 import numpy as np
 import upkie.envs
+from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3 import PPO
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.robot_state import RobotState
 from upkie.utils.robot_state_randomization import RobotStateRandomization
-
-from settings import EnvSettings, PPOSettings, TrainingSettings
 from wrap_velocity_env import wrap_velocity_env
 
 upkie.envs.register()
@@ -80,16 +79,12 @@ def run_policy(env: gym.Wrapper, policy) -> None:
     """
     action = np.zeros(env.action_space.shape)
     observation, info = env.reset()
-    reward = 0.0
     while True:
         action, _ = policy.predict(observation, deterministic=True)
         tip_position, tip_velocity = get_tip_state(observation[-1])
         env.unwrapped.log("action", action)
         env.unwrapped.log("observation", observation[-1])
-        env.unwrapped.log("reward", reward)
-        env.unwrapped.log("tip_position", tip_position)
-        env.unwrapped.log("tip_velocity", tip_velocity)
-        observation, reward, terminated, truncated, info = env.step(action)
+        observation, _, terminated, truncated, info = env.step(action)
         if terminated or truncated:
             observation, info = env.reset()
 
@@ -148,17 +143,17 @@ if __name__ == "__main__":
     # Policy parameters
     policy_path = args.policy
     if policy_path is None:
-        script_dir = os.path.abspath(os.path.dirname(__file__))
-        policy_dir = os.path.join(os.path.dirname(script_dir), "policy")
-        policy_path = f"{policy_dir}/params.zip"
-    if policy_path.endswith(".zip"):
-        policy_path = policy_path[:-4]
+        script_dir = Path(__file__).parent.resolve()
+        policy_dir = script_dir.parent / "policy"
+        policy_path = policy_dir / "params.zip"
+    if str(policy_path).endswith(".zip"):
+        policy_path = str(policy_path)[:-4]
     logging.info("Loading policy from %s.zip", policy_path)
 
     # Configuration
-    config_path = f"{os.path.dirname(policy_path)}/operative_config.gin"
+    config_path = Path(policy_path).parent / "operative_config.gin"
     logging.info("Loading policy configuration from %s", config_path)
-    gin.parse_config_file(config_path)
+    gin.parse_config_file(str(config_path))
 
     try:
         main(policy_path, args.training)

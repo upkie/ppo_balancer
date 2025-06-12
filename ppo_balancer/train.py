@@ -299,7 +299,9 @@ def train_policy(
 
     training = TrainingSettings()
     deez_runfiles = runfiles.Create()
-    spine_path = Path(agent_dir) / deez_runfiles.Rlocation("upkie/spines/bullet_spine")
+    spine_path = Path(agent_dir) / deez_runfiles.Rlocation(
+        "upkie/spines/bullet_spine"
+    )
 
     vec_env = (
         SubprocVecEnv(
