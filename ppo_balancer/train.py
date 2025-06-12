@@ -205,7 +205,7 @@ def init_env(
 
         # parent process: trainer
         agent_frequency = env_settings.agent_frequency
-        base_env = gymnasium.make(
+        velocity_env = gymnasium.make(
             env_settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
             frequency=agent_frequency,
@@ -214,18 +214,17 @@ def init_env(
             spine_config=env_settings.spine_config,
             max_ground_velocity=env_settings.max_ground_velocity,
         )
-        reward_env = DefineReward(base_env)
-        reward_env.reset(seed=seed)
-        reward_env._prepatch_close = reward_env.close
+        velocity_env.reset(seed=seed)
+        velocity_env._prepatch_close = velocity_env.close
 
         def close_monkeypatch():
             logging.info(f"Terminating spine {shm_name} with {pid=}...")
             os.kill(pid, signal.SIGINT)  # interrupt spine child process
             os.waitpid(pid, 0)  # wait for spine to terminate
-            reward_env._prepatch_close()
+            velocity_env._prepatch_close()
 
-        reward_env.close = close_monkeypatch
-        env = wrap_velocity_env(reward_env, env_settings, training=True)
+        velocity_env.close = close_monkeypatch
+        env = wrap_velocity_env(velocity_env, env_settings, training=True)
         return Monitor(env)
 
     set_random_seed(seed)

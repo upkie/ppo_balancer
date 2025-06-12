@@ -8,6 +8,7 @@ import gymnasium
 import numpy as np
 from gymnasium import spaces
 from gymnasium.wrappers import FrameStackObservation, RescaleAction
+from settings import EnvSettings
 from upkie.envs import UpkieGroundVelocity
 from upkie.envs.wrappers import (
     AddActionToObservation,
@@ -17,7 +18,7 @@ from upkie.envs.wrappers import (
     NoisifyObservation,
 )
 
-from settings import EnvSettings
+from define_reward import DefineReward
 
 
 def wrap_velocity_env(
@@ -28,6 +29,7 @@ def wrap_velocity_env(
     env = velocity_env
 
     if training:  # training-specific wrappers
+        env = DefineReward(env)
         env = NoisifyObservation(
             env,
             noise=np.array(env_settings.observation_noise),
@@ -42,7 +44,7 @@ def wrap_velocity_env(
         )
 
     env = AddActionToObservation(env)
-    env = FrameStackObservation( env, env_settings.history_size)
+    env = FrameStackObservation(env, env_settings.history_size)
     env = DifferentiateAction(
         env,
         min_derivative=-env_settings.max_ground_accel,
