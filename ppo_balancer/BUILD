@@ -23,11 +23,6 @@ py_binary(
     name = "run",
     srcs = ["run.py"],
     main = "run.py",
-
-    # Enable `from X import y` rather than `from agents.agent_name.X import y`
-    # so that the agent can be run indifferently via Python or Bazel.
-    imports = ["."],
-
     data = [
         "//policy",
     ],
