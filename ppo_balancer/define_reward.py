@@ -68,7 +68,6 @@ class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         """
         observation, _, terminated, truncated, info = self.env.step(action)
         reward = self.reward(self.last_observation, action, observation)
-        self.last_action = action
         self.last_observation = observation
         return (
             observation,
@@ -105,9 +104,12 @@ class DefineReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         velocity_penalty = -abs(tip_velocity)
 
         action_change_penalty = 0.0
-        if self.last_action is not None:
+        if self.last_action is None:
+            self.last_action = action
+        else:  # self.last_action is not None
             action_change = action - self.last_action
             action_change_penalty = -action_change.dot(action_change)
+            self.last_action = 0.4 * action + 0.6 * self.last_action
 
         reward = (
             self.position_weight * position_reward
