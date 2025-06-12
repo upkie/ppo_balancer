@@ -38,13 +38,13 @@ user@your-upkie:ppo_balancer$ make unpack_pixi_env
 To run the deployed policy on your Upkie:
 
 ```console
-make run_policy
+make run_agent
 ```
 
 Before that, to test the policy on your machine:
 
 ```console
-pixi run policy
+pixi run agent
 ```
 
 Here we assumed the spine is already up and running, for instance by running `./start_simulation.sh` on your machine, or by starting a pi3hat spine on the robot.

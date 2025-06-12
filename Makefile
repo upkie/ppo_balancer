@@ -4,11 +4,6 @@
 
 PROJECT_NAME = ppo_balancer
 
-# You can adjust the number of training environments for best performance on
-# your machine, either by editing this file or by passing it to the `make`
-# command, e.g. `make <your_target> NB_TRAINING_ENVS=<new_value>`.
-NB_TRAINING_ENVS = 6
-
 # Programs
 BAZEL = $(CURDIR)/tools/bazelisk
 PYTHON = python3
@@ -82,7 +77,7 @@ unpack_pixi_env:  ### unpack Python environment
 		exit 1; \
 	}
 
-run_policy:  ### run saved policy
+run_agent:  ### run saved policy
 	@if [ -f $(CURDIR)/activate.sh ]; then \
 		echo ". $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py"; \
 		. $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py; \
