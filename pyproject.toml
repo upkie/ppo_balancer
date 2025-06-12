@@ -29,7 +29,7 @@ pixi-pack = "*"
 [tool.pixi.feature.pack.tasks]
 pack-to-upkie = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel"
 
-[tool.pixi.tasks.policy]
+[tool.pixi.tasks.agent]
 cmd = "python ppo_balancer/run.py"
 
 [tool.pixi.tasks.train]

@@ -3670,7 +3670,7 @@ packages:
 - pypi: ./
   name: ppo-balancer
   version: 1.0.0
-  sha256: f05f3bdc4566071d0267f6debc1fac90ffab75f740083dda65756d2bc84573fe
+  sha256: 804ddd63040e7c7dc81bd67411248d34ab855e917e284420787924b00a8042cb
   requires_python: '>=3.9'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/protobuf-5.29.3-py312h0f4f066_0.conda
