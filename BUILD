@@ -20,3 +20,8 @@ config_setting(
         "cpu": "aarch64",
     }
 )
+
+filegroup(
+    name = "config",
+    srcs = glob(["*.gin"]),
+)

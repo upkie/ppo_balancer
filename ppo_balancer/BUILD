@@ -4,11 +4,6 @@
 
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
-    name = "config",
-    srcs = glob(["*.gin"]),
-)
-
 py_library(
     name = "common",
     srcs = [
@@ -16,7 +11,7 @@ py_library(
         "wrap_velocity_env.py",
     ],
     data = [
-        ":config",
+        "//:config",
     ],
     deps = [
         "@upkie//upkie/envs",
