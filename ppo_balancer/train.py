@@ -11,6 +11,7 @@ import random
 import shutil
 import signal
 import tempfile
+from pathlib import Path
 from typing import Callable, List
 
 import gin
@@ -233,10 +234,10 @@ def init_env(
 
 def find_save_path(training_dir: str, policy_name: str):
     def path_for_iter(nb_iter: int):
-        return f"{training_dir}/{policy_name}_{nb_iter}"
+        return Path(training_dir) / f"{policy_name}_{nb_iter}"
 
     nb_iter = 1
-    while os.path.exists(path_for_iter(nb_iter)):
+    while Path(path_for_iter(nb_iter)).exists():
         nb_iter += 1
     return path_for_iter(nb_iter)
 
@@ -280,17 +281,17 @@ def train_policy(
         show: Whether to show the simulation GUI.
     """
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    training_dir = f"{TRAINING_PATH}/{date}"
+    training_dir = Path(TRAINING_PATH) / date
     logging.info("Logging training data in %s", training_dir)
     logging.info(
         "To track in TensorBoard, run "
         f"`tensorboard --logdir {training_dir}`"
     )
-    today_path = os.path.join(TRAINING_PATH, "today")
-    if os.path.exists(today_path):
-        os.remove(today_path)
-    target_path = os.path.join(TRAINING_PATH, date)
-    os.symlink(target_path, today_path)
+    today_path = Path(TRAINING_PATH) / "today"
+    if today_path.exists():
+        today_path.unlink()
+    target_path = Path(TRAINING_PATH) / date
+    today_path.symlink_to(target_path)
 
     if policy_name == "":
         policy_name = get_random_word()
@@ -298,10 +299,7 @@ def train_policy(
 
     training = TrainingSettings()
     deez_runfiles = runfiles.Create()
-    spine_path = os.path.join(
-        agent_dir,
-        deez_runfiles.Rlocation("upkie/spines/bullet_spine"),
-    )
+    spine_path = Path(agent_dir) / deez_runfiles.Rlocation("upkie/spines/bullet_spine")
 
     vec_env = (
         SubprocVecEnv(
@@ -420,7 +418,7 @@ def train_policy(
 
 
 def deploy_policy(policy_path: str):
-    deployment_path = os.path.abspath(f"{TRAINING_PATH}/../policy")
+    deployment_path = Path(TRAINING_PATH).parent / "policy"
     logging.info(
         "Deploying policy from %s to %s", policy_path, deployment_path
     )
@@ -452,8 +450,8 @@ deploy:
 
 if __name__ == "__main__":
     args = parse_command_line_arguments()
-    agent_dir = os.path.dirname(__file__)
-    gin.parse_config_file(f"{agent_dir}/settings.gin")
+    agent_dir = Path(__file__).parent.parent
+    gin.parse_config_file(str(agent_dir / "config.gin"))
     train_policy(
         args.name,
         nb_envs=args.nb_envs,
