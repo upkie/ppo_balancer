@@ -10,8 +10,6 @@ PYTHON = python3
 
 CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
-TRAINING_DATE = $(shell date +%Y-%m-%d)
-TRAINING_PATH = ${UPKIE_TRAINING_PATH}
 
 # Only used to avoid uploading the training directory to the robot
 TRAINING_DIRNAME = $(shell basename ${UPKIE_TRAINING_PATH})
@@ -58,10 +56,6 @@ upload: check_upkie_name  ## upload balancer to the robot
 		--exclude env/ \
 		--progress \
 		$(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
-
-tensorboard:  ## Start TensorBoard on today's trainings
-	xdg-open http://localhost:6006 &
-	tensorboard --logdir $(TRAINING_PATH)/$(TRAINING_DATE)
 
 pack_pixi_env:  ## pack Python environment to be deployed to your Upkie
 	@pixi run pack-to-upkie || { \
