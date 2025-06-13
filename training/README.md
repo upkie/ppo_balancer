@@ -4,8 +4,8 @@ Configure the training path environment variable so that new policies are automa
 export UPKIE_TRAINING_PATH="${HOME}/src/ppo_balancer/training"
 ```
 
-You can then use the Makefile in the `ppo_balancer` directory to start TensorBoard automatically:
+You can then start TensorBoard from the repository by:
 
 ```console
-make tensorboard
+pixi run tensorboard
 ```

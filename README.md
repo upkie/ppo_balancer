@@ -63,13 +63,21 @@ Once this works, train for real with more environments and no GUI:
 pixi run train <nb_envs>
 ```
 
-Adjust the number `nb_envs` of parallel environments based on the `time/fps` series. The series is reported to the command line, as well as to TensorBoard which you can start by:
+Adjust the number `nb_envs` of parallel environments based on the `time/fps` series. The series is reported to the command line (or to TensorBoard if you configure `UPKIE_TRAINING_PATH` as detailed below). Increase or decrease the number of environments until you find the sweet spot that maximizes FPS on your machine.
 
-```console
-make tensorboard
+### TensorBoard
+
+The repository comes with a training directory that will store logs each time a new policy is learned. Set the `UPKIE_TRAINING_PATH` environment variable to enable this:
+
+```sh
+export UPKIE_TRAINING_PATH="${HOME}/src/ppo_balancer/training"
 ```
 
-Increase the number of environments from the default value to "as much as you can as long as FPS keeps going up".
+Trainings will be grouped automatically by day. You can start TensorBoard for today by:
+
+```console
+pixi run tensorboard
+```
 
 ### Advanced usage
 
