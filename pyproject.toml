@@ -20,6 +20,7 @@ ppo_balancer = { path = ".", editable = true }
 gin-config = ">=0.5.0"
 gymnasium = ">=1.0.0"
 stable-baselines3 = ">=2.1.0,<3.0"
+tensorboard = ">=2,<3"
 upkie = ">=8,<9"
 
 [tool.pixi.feature.pack]
@@ -27,7 +28,6 @@ dependencies = { pixi-pack = "*" }
 tasks.pack-to-upkie = { cmd = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel" }
 
 [tool.pixi.feature.tensorboard]
-dependencies = { tensorboard = ">=2,<3" }
 tasks.tensorboard = { cmd = "tensorboard --logdir $UPKIE_TRAINING_PATH/$(date +%Y-%m-%d)" }
 
 [tool.pixi.tasks.agent]
@@ -37,7 +37,7 @@ cmd = "python ppo_balancer/run.py"
 args = ["nb_envs"]
 cmd = "./tools/bazelisk run //ppo_balancer:train -- --nb-envs {{ nb_envs }}"
 
-[tool.pixi.tasks.show_training]
+[tool.pixi.tasks.show-training]
 args = ["nb_envs"]
 cmd = "./tools/bazelisk run //ppo_balancer:train -- --nb-envs {{ nb_envs }} --show"
 
