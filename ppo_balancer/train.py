@@ -371,7 +371,6 @@ def train_policy(
 
     save_path = find_save_path(training_dir, policy_name)
     logging.info("Training data will be logged to %s", save_path)
-    os.makedirs(save_path, exist_ok=True)
 
     try:
         policy.learn(
@@ -412,6 +411,7 @@ def train_policy(
         logging.info("Training interrupted.")
 
     # Save policy no matter what!
+    os.makedirs(save_path, exist_ok=True)
     policy.save(f"{save_path}/final.zip")
     policy.env.close()
     write_policy_makefile(save_path)
