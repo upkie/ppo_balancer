@@ -58,16 +58,16 @@ upload: check_upkie_name  ## upload balancer to the robot
 		$(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
 
 pack_pixi_env:  ## pack Python environment to be deployed to your Upkie
-	@pixi run pack-to-upkie || { \
+	@pixi run pack || { \
 		echo "Error: pixi not found"; \
 		echo "See https://pixi.sh/latest/#installation"; \
 		exit 1; \
 	}
 
 unpack_pixi_env:  ### unpack Python environment
-	@pixi-pack unpack environment.tar || { \
-		echo "Error: pixi-pack not found"; \
-		echo "You can download `pixi-pack-aarch64-unknown-linux-musl` from https://github.com/Quantco/pixi-pack/releases"; \
+	@pixi-unpack environment.tar || { \
+		echo "Error: pixi-unpack not found"; \
+		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
 		exit 1; \
 	}
 

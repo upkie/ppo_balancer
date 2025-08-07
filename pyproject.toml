@@ -24,8 +24,8 @@ tensorboard = ">=2,<3"
 upkie = ">=8,<9"
 
 [tool.pixi.feature.pack]
-dependencies = { pixi-pack = "*" }
-tasks.pack-to-upkie = { cmd = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel" }
+dependencies = { pixi-pack = ">=0.7.2" }
+tasks.pack = "pixi-pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel"
 
 [tool.pixi.feature.tensorboard]
 tasks.tensorboard = { cmd = "tensorboard --logdir $UPKIE_TRAINING_PATH/$(date +%Y-%m-%d)" }
