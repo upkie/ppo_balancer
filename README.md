@@ -6,42 +6,17 @@
 
 [![upkie](https://img.shields.io/badge/upkie-8.0.0-bbaacc)](https://github.com/upkie/upkie/tree/v8.0.0)
 
-The PPO balancer is a feedforward neural network policy trained by reinforcement learning with a sim-to-real pipeline. Like the [MPC balancer](https://github.com/upkie/mpc_balancer) and [PID balancer](https://upkie.github.io/upkie/pid-balancer.html), it balances Upkie with straight legs. Training uses the <code><a href="https://upkie.github.io/upkie/classupkie_1_1envs_1_1upkie__ground__velocity_1_1UpkieGroundVelocity.html">UpkieGroundVelocity</a></code> gym environment and the PPO implementation from [Stable Baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html).
+The PPO balancer is a feedforward neural network policy trained by reinforcement learning with a sim-to-real pipeline. It balances Upkie using wheels only. Training uses the `UpkieGroundVelocity` environment and the PPO implementation from [Stable Baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html).
 
 An overview video of the training pipeline is given in this video: [Sim-to-real RL pipeline for Upkie wheeled bipeds](https://www.youtube.com/shorts/bvWgYso1dzI).
 
-## Installation
+## Training
 
 ### On your machine
 
 Install [pixi](https://pixi.sh/latest/#installation).
 
-### On your Upkie
-
-The PPO balancer uses [pixi-pack](https://github.com/Quantco/pixi-pack/releases) to pack a standalone Python environment to run policies on your Upkie. First, create `environment.tar` on your machine and upload it by:
-
-```console
-make pack_pixi_env
-make upload
-```
-
-Then, unpack the remote environment:
-
-```console
-$ ssh user@your-upkie
-user@your-upkie:~$ cd ppo_balancer
-user@your-upkie:ppo_balancer$ make unpack_pixi_env
-```
-
-## Usage
-
-To run the deployed policy on your Upkie:
-
-```console
-make run_agent
-```
-
-Before that, to test the policy on your machine:
+To test the trained policy on your machine:
 
 ```console
 pixi run agent
@@ -78,6 +53,33 @@ Trainings will be grouped automatically by day. You can start TensorBoard for to
 ```console
 pixi run tensorboard
 ```
+
+## Real-robot execution
+
+The PPO balancer uses [pixi-pack](https://github.com/Quantco/pixi-pack/releases) to pack a standalone Python environment to run policies on your Upkie. First, create `environment.tar` on your machine and upload it by:
+
+```console
+make pack_pixi_env
+make upload
+```
+
+Then, unpack the remote environment:
+
+```console
+$ ssh user@your-upkie
+user@your-upkie:~$ cd ppo_balancer
+user@your-upkie:ppo_balancer$ make unpack_pixi_env
+```
+
+## Usage
+
+To run the deployed policy on your Upkie:
+
+```console
+make run_agent
+```
+
+Here we assumed the pi3hat spine is already up and running.
 
 ### Advanced usage
 
