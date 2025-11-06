@@ -10,29 +10,31 @@ The PPO balancer is a feedforward neural network policy trained by reinforcement
 
 An overview video of the training pipeline is given in this video: [Sim-to-real RL pipeline for Upkie wheeled bipeds](https://www.youtube.com/shorts/bvWgYso1dzI).
 
-## Training
+## Getting started
 
-### On your machine
+First, install [pixi](https://pixi.sh/latest/#installation).
 
-Install [pixi](https://pixi.sh/latest/#installation).
-
-To test the trained policy on your machine:
+To test the last trained agent, first start a simulation process:
 
 ```console
+./start_simulation.sh
+```
+
+Then run the agent with:
+
+```
 pixi run agent
 ```
 
-Here we assumed the spine is already up and running, for instance by running `./start_simulation.sh` on your machine, or by starting a pi3hat spine on the robot.
+## Training
 
-### Training a new policy
-
-First, check that training progresses one rollout at a time:
+To train a new policy, let's check first that training progresses properly one rollout at a time:
 
 ```console
 pixi run show_training
 ```
 
-Once this works, train for real with more environments and no GUI:
+Once this works, we can train for real with more environments and no GUI:
 
 ```console
 pixi run train <nb_envs>
