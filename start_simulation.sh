@@ -5,7 +5,7 @@
 # This script is mentioned in the readme.
 
 DOWNLOAD_URL="https://github.com/upkie/upkie/releases/download"
-VERSION=8.0.0
+VERSION=8.1.1
 
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)

@@ -6,4 +6,4 @@ dependencies:
     - gymnasium >=1.0.0
     - stable-baselines3 >=2.1.0,<3.0
     - tensorboard
-    - upkie >=8.0.0,<9
+    - upkie >=8.1.1,<9

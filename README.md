@@ -4,7 +4,7 @@
     <img src="https://github.com/upkie/ppo_balancer/assets/1189580/3c4bac9b-02bf-429b-8b81-f931e4ce542f" align="right" height=200>
 </a>
 
-[![upkie](https://img.shields.io/badge/upkie-8.0.0-bbaacc)](https://github.com/upkie/upkie/tree/v8.0.0)
+[![upkie](https://img.shields.io/badge/upkie-8.1.1-bbaacc)](https://github.com/upkie/upkie/tree/v8.1.1)
 
 The PPO balancer is a feedforward neural network policy trained by reinforcement learning with a sim-to-real pipeline. It balances Upkie using wheels only. Training uses the `UpkieGroundVelocity` environment and the PPO implementation from [Stable Baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html).
 
