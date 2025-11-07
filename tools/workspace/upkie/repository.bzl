@@ -22,3 +22,14 @@ def upkie_repository(
         sha256 = sha256,
         strip_prefix = "upkie-{}".format(version),
     )
+
+# You can replace the definition above by the following one to customize code
+# in the upkie repository:
+#
+# def upkie_repository():
+#     git_repository(
+#         name = "upkie",
+#         remote = "https://github.com/YOUR_USER/upkie",
+#         commit = "YOUR_COMMIT_ID",
+#         shallow_since = "DATE_BAZEL_WILL_GIVE_YOU_IN_A_WARNING",
+#     )

@@ -40,6 +40,24 @@ clean:  ## clean build and environment files
 	$(BAZEL) clean --expunge
 	rm -f environment.tar
 
+pack_pixi_env:  ## pack Python environment to be deployed to your Upkie
+	@pixi run pack || { \
+		echo "Error: pixi not found"; \
+		echo "See https://pixi.sh/latest/#installation"; \
+		exit 1; \
+	}
+
+run_real:  ### run saved policy on the real robot
+	echo ". $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py"; \
+	. $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py; \
+
+unpack_pixi_env:  ### unpack Python environment
+	@pixi-unpack environment.tar || { \
+		echo "Error: pixi-unpack not found"; \
+		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
+		exit 1; \
+	}
+
 upload: check_upkie_name  ## upload balancer to the robot
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
 	ssh ${UPKIE_NAME} mkdir -p $(CURDIR_NAME)
@@ -56,26 +74,3 @@ upload: check_upkie_name  ## upload balancer to the robot
 		--exclude env/ \
 		--progress \
 		$(CURDIR)/ ${UPKIE_NAME}:$(CURDIR_NAME)/
-
-pack_pixi_env:  ## pack Python environment to be deployed to your Upkie
-	@pixi run pack || { \
-		echo "Error: pixi not found"; \
-		echo "See https://pixi.sh/latest/#installation"; \
-		exit 1; \
-	}
-
-unpack_pixi_env:  ### unpack Python environment
-	@pixi-unpack environment.tar || { \
-		echo "Error: pixi-unpack not found"; \
-		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
-		exit 1; \
-	}
-
-run_agent:  ### run saved policy
-	@if [ -f $(CURDIR)/activate.sh ]; then \
-		echo ". $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py"; \
-		. $(CURDIR)/activate.sh && $(PYTHON) ppo_balancer/run.py; \
-	else \
-		echo "$(PYTHON) ppo_balancer/run.py"; \
-		$(PYTHON) ppo_balancer/run.py; \
-	fi
