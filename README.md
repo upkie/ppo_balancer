@@ -61,7 +61,7 @@ pixi run tensorboard
 The PPO balancer uses [pixi-pack](https://github.com/Quantco/pixi-pack/releases) to pack a standalone Python environment to run policies on your Upkie. First, create `environment.tar` on your machine and upload it by:
 
 ```console
-make pack_pixi_env
+make pack_env
 make upload
 ```
 
@@ -70,7 +70,7 @@ Then, unpack the remote environment:
 ```console
 $ ssh user@your-upkie
 user@your-upkie:~$ cd ppo_balancer
-user@your-upkie:ppo_balancer$ make unpack_pixi_env
+user@your-upkie:ppo_balancer$ make unpack_env
 ```
 
 ## Usage
